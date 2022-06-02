@@ -14,17 +14,24 @@ const server = app.listen(app.get('port'), () => {
 })
 
 const SocketIO = require('socket.io')
+const { log } = require('console')
 const io = SocketIO(server)
 
 let players = []
 let bullets = []
 let kills = {}
+let connections = {}
 
 io.on('connection', socket => {
 
-    console.log("new connection", socket.id);
+    // console.log("new connection", socket.id);
 
     socket.on('player', data => {
+
+        if(connections[socket.id] == undefined) {
+            connections[socket.id] = data.id
+            // console.log(connections);
+        }
 
         // if(players.includes(data.id)){
         if(players.some(e => e.id === data.id)){
@@ -32,6 +39,8 @@ io.on('connection', socket => {
         }
         players.push(data)
         io.sockets.emit('players', players)
+
+        
     })
 
     socket.on('bullet', data => {
@@ -58,5 +67,10 @@ io.on('connection', socket => {
         io.sockets.emit('kills', kills)
 
     })
+    
+    socket.on("disconnect", () => {
+        players = players.filter(el => el.id !== connections[socket.id])
+        io.sockets.emit('displayer', connections[socket.id])
+    });
 
 })

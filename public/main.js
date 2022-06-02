@@ -366,4 +366,12 @@ socket.on('kills', kills => {
     Object.entries(kills).forEach(([key, value], index) => {
         if(index < 10) scoreBoard.children[i].textContent = `${i+1}# ${key}: ${value}`
     })
+
+})
+
+socket.on('displayer', id => {
+
+    players.find(x => x.id === id).destroy()
+    players = players.filter(x => x.id !== id)
+    
 })
