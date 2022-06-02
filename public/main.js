@@ -334,6 +334,8 @@ socket.on('players', socketPlayers => {
                             editPlayer.speedRight = socketPlayer.speedRight;
                             editPlayer.speedUp = socketPlayer.speedUp;
                             editPlayer.speedDown = socketPlayer.speedDown;
+                            editPlayer.x = socketPlayer.x;
+                            editPlayer.y = socketPlayer.y;
                             editPlayer.facing = socketPlayer.facing;
                         }else{
                             players = players.filter(x => x.id !== socketPlayer.id);
