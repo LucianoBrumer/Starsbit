@@ -398,5 +398,5 @@ socket.on('displayer', id => {
 function playerDisconnect(id){
     playerDis = players.find(x => x.id === id);
     console.log(playerDis.id);
-    playerDis.destroy();
+    playerDis.element.remove();
 }
