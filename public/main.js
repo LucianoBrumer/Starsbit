@@ -201,14 +201,20 @@ class Starship extends TruonObject{
             this.x = this.x - this.speedLeft + this.speedRight;
             this.y = this.y - this.speedUp + this.speedDown;
 
-            console.log(this.speedLeft, this.speedRight);
-
             this.translate(this.x, this.y, this.z);
 
             socket.emit('player', {
                 id: this.id,
                 x: this.x,
                 y: this.y,
+                moveLeft: this.moveLeft,
+                moveRight: this.moveRight,
+                moveDown: this.moveDown,
+                moveUp: this.moveUp,
+                speedLeft: this.speedLeft,
+                speedRight: this.speedRight,
+                speedUp: this.speedUp,
+                speedDown: this.speedDown,
                 facing: this.facing,
             })
 
@@ -321,8 +327,16 @@ socket.on('players', socketPlayers => {
                 players.forEach(editPlayer => {
                     if(editPlayer.id === socketPlayer.id){
                         if(document.body.contains(editPlayer.element)){
-                            editPlayer.x = socketPlayer.x;
-                            editPlayer.y = socketPlayer.y;
+                            editPlayer.moveLeft = socketPlayer.moveLeft;
+                            editPlayer.moveRight = socketPlayer.moveRight;
+                            editPlayer.moveDown = socketPlayer.moveDown;
+                            editPlayer.moveUp = socketPlayer.moveUp;
+                            // editPlayer.speedLeft = socketPlayer.speedLeft;
+                            // editPlayer.speedRight = socketPlayer.speedRight;
+                            // editPlayer.speedUp = socketPlayer.speedUp;
+                            // editPlayer.speedDown = socketPlayer.speedDown;
+                            // editPlayer.x = socketPlayer.x;
+                            // editPlayer.y = socketPlayer.y;
                             editPlayer.facing = socketPlayer.facing;
                         }else{
                             players = players.filter(x => x.id !== socketPlayer.id);
