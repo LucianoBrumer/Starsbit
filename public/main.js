@@ -364,7 +364,7 @@ const scoreBoard = document.getElementById('scoreboard')
 socket.on('kills', kills => {
 
     Object.entries(kills).forEach(([key, value], index) => {
-        if(index < 10) scoreBoard.children[index].textContent = `${i+1}# ${key}: ${value}`
+        if(index < 10) scoreBoard.children[index].textContent = `${index+1}# ${key}: ${value}`
     })
 
 })
@@ -376,7 +376,6 @@ socket.on('displayer', id => {
 })
 
 function displayer(id){
-    console.log(`displayer: ${id}`);
+    console.log(`Player dis: ${id}`);
     players.find(x => x.id === id).destroy();
-    players = players.filter(x => x.id !== id);
 }
