@@ -393,6 +393,10 @@ socket.on('kills', kills => {
 socket.on('displayer', id => {
 
     console.log(`${id} has disconnected.`);
-    players.find(x => x.id === id).destroy();
+    playerDisconnect(id)
 
 })
+
+function playerDisconnect(id){
+    players.find(x => x.id === id).destroy();
+}
