@@ -160,34 +160,34 @@ class Starship extends TruonObject{
 
                     }
                 })
-
-                if(this.moveLeft){
-                    if(this.speedLeft < this.maxSpeed) this.speedLeft += this.power;
-                }else{
-                    if(this.speedLeft > 0) this.speedLeft -= this.power;
-                }
-
-                if(this.moveRight){
-                    if(this.speedRight < this.maxSpeed) this.speedRight += this.power;
-                }else{
-                    if(this.speedRight > 0) this.speedRight -= this.power;
-                }
-
-                if(this.moveUp){
-                    if(this.speedUp < this.maxSpeed) this.speedUp += this.power;
-                }else{
-                    if(this.speedUp > 0) this.speedUp -= this.power;
-                }
-
-                if(this.moveDown){
-                    if(this.speedDown < this.maxSpeed) this.speedDown += this.power;
-                }else{
-                    if(this.speedDown > 0) this.speedDown -= this.power;
-                }
             }else{
                 getDistance(this, player) > Window.element.clientWidth/2
                     ? this.setVisible(false)
                     : this.setVisible(true)
+            }
+
+            if(this.moveLeft){
+                if(this.speedLeft < this.maxSpeed) this.speedLeft += this.power;
+            }else{
+                if(this.speedLeft > 0) this.speedLeft -= this.power;
+            }
+
+            if(this.moveRight){
+                if(this.speedRight < this.maxSpeed) this.speedRight += this.power;
+            }else{
+                if(this.speedRight > 0) this.speedRight -= this.power;
+            }
+
+            if(this.moveUp){
+                if(this.speedUp < this.maxSpeed) this.speedUp += this.power;
+            }else{
+                if(this.speedUp > 0) this.speedUp -= this.power;
+            }
+
+            if(this.moveDown){
+                if(this.speedDown < this.maxSpeed) this.speedDown += this.power;
+            }else{
+                if(this.speedDown > 0) this.speedDown -= this.power;
             }
 
             if(this.facing == "left"){
@@ -208,7 +208,7 @@ class Starship extends TruonObject{
                 x: this.x,
                 y: this.y,
                 speedLeft: this.speedLeft,
-                speedRighty: this.speedRight,
+                speedRight: this.speedRight,
                 speedUp: this.speedUp,
                 speedDown: this.speedDown,
                 facing: this.facing,
@@ -382,10 +382,6 @@ socket.on('kills', kills => {
 
 socket.on('displayer', id => {
 
-    displayer(id)
-    
-})
-
-function displayer(id){
     players.find(x => x.id === id).destroy();
-}
+
+})
