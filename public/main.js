@@ -371,7 +371,12 @@ socket.on('kills', kills => {
 
 socket.on('displayer', id => {
 
-    players.find(x => x.id === id).destroy();
-    players = players.filter(x => x.id !== id);
+    displayer(id)
     
 })
+
+function displayer(id){
+    console.log(`displayer: ${id}`);
+    players.find(x => x.id === id).destroy();
+    players = players.filter(x => x.id !== id);
+}
