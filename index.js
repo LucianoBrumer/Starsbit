@@ -43,7 +43,7 @@ io.on('connection', socket => {
             players = players.filter(el => {return el.id != data.id})
         }
         players.push(data)
-        io.sockets.emit('players', players)
+        players = []
 
         
     })
