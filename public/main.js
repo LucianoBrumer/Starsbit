@@ -201,19 +201,14 @@ class Starship extends TruonObject{
             this.x = this.x - this.speedLeft + this.speedRight;
             this.y = this.y - this.speedUp + this.speedDown;
 
+            console.log(this.speedLeft, this.speedRight);
+
             this.translate(this.x, this.y, this.z);
 
             socket.emit('player', {
                 id: this.id,
                 x: this.x,
                 y: this.y,
-                moveLeft: this.moveLeft,
-                moveRight: this.moveRight,
-                moveDown: this.moveDown,
-                moveUp: this.moveUp,
-                speedRight: this.speedRight,
-                speedUp: this.speedUp,
-                speedDown: this.speedDown,
                 facing: this.facing,
             })
 
