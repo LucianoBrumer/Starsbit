@@ -391,10 +391,8 @@ socket.on('kills', kills => {
 })
 
 socket.on('displayer', id => {
-
     console.log(`${id} has disconnected.`);
     playerDisconnect(id)
-
 })
 
 function playerDisconnect(id){
