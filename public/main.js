@@ -318,9 +318,14 @@ socket.on('players', socketPlayers => {
             }else{
                 players.forEach(editPlayer => {
                     if(editPlayer.id === socketPlayer.id){
-                        editPlayer.x = socketPlayer.x;
-                        editPlayer.y = socketPlayer.y;
-                        editPlayer.facing = socketPlayer.facing;
+                        if(document.body.contains(editPlayer.element)){
+                            editPlayer.x = socketPlayer.x;
+                            editPlayer.y = socketPlayer.y;
+                            editPlayer.facing = socketPlayer.facing;
+                        }else{
+                            players = players.filter(x => x.id !== socketPlayer.id);
+                            players.push(new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.025, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id));
+                        }
                     }
                 })
             }
@@ -376,6 +381,5 @@ socket.on('displayer', id => {
 })
 
 function displayer(id){
-    console.log(`Player dis: ${id}`);
     players.find(x => x.id === id).destroy();
 }
