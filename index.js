@@ -26,11 +26,6 @@ io.on('connection', socket => {
 
     // console.log("new connection", socket.id);
 
-    socket.on("disconnect", () => {
-        players = players.filter(el => el.id !== connections[socket.id])
-        io.sockets.emit('displayer', connections[socket.id])
-    });
-
     socket.on('player', data => {
 
         if(connections[socket.id] == undefined) {
@@ -43,7 +38,7 @@ io.on('connection', socket => {
             players = players.filter(el => {return el.id != data.id})
         }
         players.push(data)
-        players = []
+        io.sockets.emit('players', players)
 
         
     })
@@ -72,5 +67,10 @@ io.on('connection', socket => {
         io.sockets.emit('kills', kills)
 
     })
+    
+    socket.on("disconnect", () => {
+        players = players.filter(el => el.id !== connections[socket.id])
+        io.sockets.emit('displayer', connections[socket.id])
+    });
 
 })
