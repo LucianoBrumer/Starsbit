@@ -207,7 +207,10 @@ class Starship extends TruonObject{
                 id: this.id,
                 x: this.x,
                 y: this.y,
-                speedLeft: this.speedLeft,
+                moveLeft: this.moveLeft,
+                moveRight: this.moveRight,
+                moveDown: this.moveDown,
+                moveUp: this.moveUp,
                 speedRight: this.speedRight,
                 speedUp: this.speedUp,
                 speedDown: this.speedDown,
@@ -323,6 +326,10 @@ socket.on('players', socketPlayers => {
                 players.forEach(editPlayer => {
                     if(editPlayer.id === socketPlayer.id){
                         if(document.body.contains(editPlayer.element)){
+                            editPlayer.moveLeft = socketPlayer.moveLeft;
+                            editPlayer.moveRight = socketPlayer.moveRight;
+                            editPlayer.moveDown = socketPlayer.moveDown;
+                            editPlayer.moveUp = socketPlayer.moveUp;
                             editPlayer.speedLeft = socketPlayer.speedLeft;
                             editPlayer.speedRight = socketPlayer.speedRight;
                             editPlayer.speedUp = socketPlayer.speedUp;
