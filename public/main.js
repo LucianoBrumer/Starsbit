@@ -203,21 +203,6 @@ class Starship extends TruonObject{
 
             this.translate(this.x, this.y, this.z);
 
-            socket.emit('player', {
-                id: this.id,
-                x: this.x,
-                y: this.y,
-                moveLeft: this.moveLeft,
-                moveRight: this.moveRight,
-                moveDown: this.moveDown,
-                moveUp: this.moveUp,
-                speedLeft: this.speedLeft,
-                speedRight: this.speedRight,
-                speedUp: this.speedUp,
-                speedDown: this.speedDown,
-                facing: this.facing,
-            })
-
             // if(this.mainPlayer) Camera.smoothTarget(this.x, this.y, 15)
             if(this.mainPlayer) Camera.target(this.x, this.y)
 
@@ -295,22 +280,25 @@ for (let index = 0; index < 50; index++) {
     stars.push(new Star())
 }
 
-// function loop(){
-//     setTimeout(() => {
+function loop(){
+    socket.emit('player', {
+        id: player.id,
+        x: player.x,
+        y: player.y,
+        moveLeft: player.moveLeft,
+        moveRight: player.moveRight,
+        moveDown: player.moveDown,
+        moveUp: player.moveUp,
+        speedLeft: player.speedLeft,
+        speedRight: player.speedRight,
+        speedUp: player.speedUp,
+        speedDown: player.speedDown,
+        facing: player.facing,
+    })
 
-//         TopKills[player.id] = player.kills
-//         players.forEach(pl => {
-//             TopKills[pl.id] = pl.kills
-//         })
-        
-//         for (let i = 0; i < 10; i++) {
-//             scoreBoard.children[i].textContent = `${i+1}#`
-//         }
-
-//         loop()
-//     }, 1)
-// }
-// loop()
+    loop()
+}
+loop()
 
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
