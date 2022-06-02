@@ -339,8 +339,8 @@ socket.on('players', socketPlayers => {
                             editPlayer.y = socketPlayer.y;
                             editPlayer.facing = socketPlayer.facing;
                         }else{
-                            players = players.filter(x => x.id !== socketPlayer.id);
-                            players.push(new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.025, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id));
+                            // players = players.filter(x => x.id !== socketPlayer.id);
+                            // players.push(new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.025, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id));
                         }
                     }
                 })
