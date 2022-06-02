@@ -364,7 +364,7 @@ const scoreBoard = document.getElementById('scoreboard')
 socket.on('kills', kills => {
 
     Object.entries(kills).forEach(([key, value], index) => {
-        if(index < 10) scoreBoard.children[i].textContent = `${i+1}# ${key}: ${value}`
+        if(index < 10) scoreBoard.children[index].textContent = `${i+1}# ${key}: ${value}`
     })
 
 })
