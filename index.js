@@ -61,9 +61,15 @@ io.on('connection', socket => {
 
     socket.on('kill', data => {
 
-        if(!kills[data.id]) kills[data.id] = 0
-        kills[data.id] = kills[data.id] + 1
+        // if(!kills[data.id]) kills[data.id] = 0
+        // kills[data.id] = kills[data.id] + 1
+        
+        const name = players.find(x => x.id === data.id).name
+        if(!kills[name]) kills[name] = 0
+        kills[name] = kills[name] + 1
+
         console.log(kills);
+
         io.sockets.emit('kills', kills)
 
     })

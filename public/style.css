@@ -7,6 +7,7 @@
 html {
     overflow: hidden;
     background-color: #fff;
+    font-family: system-ui;
 }
 
 .box{
@@ -32,7 +33,50 @@ ul {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    font-family: system-ui;
     list-style: none;
     font-size: 12.5px 
+}
+
+#div-name{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#name {
+    color: #fff;
+    background: rgb(15, 15, 30, 0.5);
+    padding: 15px;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#name input[type=text]{
+    outline:none;
+    border: none;
+    background: transparent;
+    border-bottom: 1px solid #fff;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 100;
+    padding: 5px;
+}
+
+#name input[type=submit]{
+    outline:none;
+    border: none;
+    background: rgb(15, 15, 30, 0.5);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 100;
+    padding: 5px;
+    cursor: pointer;
 }

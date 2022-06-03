@@ -91,7 +91,7 @@ class Bullet extends TruonObject{
 }
 
 class Starship extends TruonObject{
-    constructor(x, y, z, width, height, size, power, maxSpeed, bulletSpeed, shotPush, control, mainPlayer, facing, id){
+    constructor(x, y, z, width, height, size, power, maxSpeed, bulletSpeed, shotPush, control, mainPlayer, facing, id, name){
         super(x, y, z, width, height);
 
         this.element.classList.add("box");
@@ -100,6 +100,7 @@ class Starship extends TruonObject{
         this.control = control
         this.mainPlayer = mainPlayer;
         this.id = id;
+        this.name = name;
 
         this.power = power; 
         this.speedLeft = 0;
@@ -207,19 +208,20 @@ class Starship extends TruonObject{
                 id: this.id,
                 x: this.x,
                 y: this.y,
-                moveLeft: this.moveLeft,
-                moveRight: this.moveRight,
-                moveDown: this.moveDown,
-                moveUp: this.moveUp,
-                speedLeft: this.speedLeft,
-                speedRight: this.speedRight,
-                speedUp: this.speedUp,
-                speedDown: this.speedDown,
+                // moveLeft: this.moveLeft,
+                // moveRight: this.moveRight,
+                // moveDown: this.moveDown,
+                // moveUp: this.moveUp,
+                // speedLeft: this.speedLeft,
+                // speedRight: this.speedRight,
+                // speedUp: this.speedUp,
+                // speedDown: this.speedDown,
                 facing: this.facing,
+                name: this.name
             })
 
             // if(this.mainPlayer) Camera.smoothTarget(this.x, this.y, 15)
-            if(this.mainPlayer) Camera.target(this.x, this.y)
+            if(this.mainPlayer) Camera.target(this.x + this.size, this.y + this.size)
 
             this.update();
         }, 1)
@@ -277,6 +279,9 @@ class Starship extends TruonObject{
             });
         }
     }
+    setName(name){
+        this.name = name;
+    }
 }
 
 let playerControl = {
@@ -286,9 +291,20 @@ let playerControl = {
     right: 'd'
 }
 
-const player = new Starship(0, 0, 0, 30, 30, 10, 0.025, 3.75, 7.5, 10, playerControl, true, "right", uuidv4());
+let player = {
+    x: Window.element.clientWidth/2,
+    y: Window.element.clientHeight/2
+};
+const nameForm = document.getElementById("name")
+const nameInput = document.getElementById("name-input")
+const nameButton = document.getElementById("name-button")
+nameForm.addEventListener('submit', e => {
+    e.preventDefault()
+    nameButton.parentElement.remove();
+    Window.cursor('none');
+    player = new Starship(0, 0, 0, 30, 30, 10, 0.025, 3.75, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
+})
 
-Window.cursor("none");
 Window.backgroundColor("rgb(0, 0, 15)");
 
 for (let index = 0; index < 50; index++) {
@@ -322,7 +338,7 @@ socket.on('players', socketPlayers => {
         if(socketPlayer.id !== player.id){
             if(!players.some(e => e.id === socketPlayer.id)){
                 // console.log('new Player');
-                players.push(new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.025, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id))
+                players.push(new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.025, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name))
             }else{
                 players.forEach(editPlayer => {
                     if(editPlayer.id === socketPlayer.id){
