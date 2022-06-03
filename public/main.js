@@ -2,6 +2,7 @@ const socket = io()
 let players = []
 let bullets = []
 let stars = []
+let worldLimit = 2000;
 
 class Cube extends TruonObject{
     constructor(x, y, z, width, height, color){
@@ -147,8 +148,8 @@ class Starship extends TruonObject{
                 existBullets.forEach(bullet => {
                     if(isCollide(player, bullet) && this.id !== bullet.playerId) {
 
-                        this.x = 0;
-                        this.y = 0;
+                        this.x = getRandomArbitrary(-worldLimit/3, worldLimit/3);
+                        this.y = getRandomArbitrary(-worldLimit/3, worldLimit/3);
 
                         socket.emit('kill', {
                             id: bullet.playerId
@@ -202,6 +203,12 @@ class Starship extends TruonObject{
             this.x = this.x - this.speedLeft + this.speedRight;
             this.y = this.y - this.speedUp + this.speedDown;
 
+            if(this.x < -worldLimit) this.x = -worldLimit
+            if(this.y < -worldLimit) this.y = -worldLimit
+            if(this.x > worldLimit) this.x = worldLimit
+            if(this.y > worldLimit) this.y = worldLimit
+            // console.log(this.x, this.y);
+
             this.translate(this.x, this.y, this.z);
 
             socket.emit('player', {
@@ -220,8 +227,17 @@ class Starship extends TruonObject{
                 name: this.name
             })
 
+            let xTarget = this.x
+            let yTarget = this.y
+
             // if(this.mainPlayer) Camera.smoothTarget(this.x, this.y, 15)
-            if(this.mainPlayer) Camera.target(this.x + this.size, this.y + this.size)
+
+            if(this.x + this.width + Window.element.clientWidth/2 > worldLimit) xTarget = worldLimit - Window.element.clientWidth/2 
+            if(this.x - this.width - Window.element.clientWidth/2 < -worldLimit) xTarget = -worldLimit + Window.element.clientWidth/2 
+            if(this.y + this.height + Window.element.clientHeight/2 > worldLimit) yTarget = worldLimit - Window.element.clientHeight/2 
+            if(this.y - this.height - Window.element.clientHeight/2 < -worldLimit) yTarget = -worldLimit + Window.element.clientHeight/2 
+             
+            if(this.mainPlayer) Camera.target(xTarget, yTarget)
 
             this.update();
         }, 1)
