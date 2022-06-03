@@ -1,4 +1,4 @@
-const socket = io()
+const socket = io({transports: ['websocket'], upgrade: false});
 let players = []
 let bullets = []
 let stars = []
@@ -326,7 +326,7 @@ nameForm.addEventListener('submit', e => {
 
 Window.backgroundColor("rgb(0, 0, 15)");
 
-for (let index = 0; index < 50; index++) {
+for (let index = 0; index < 25; index++) {
     stars.push(new Star())
 }
 
