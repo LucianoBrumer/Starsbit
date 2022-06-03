@@ -84,9 +84,19 @@ class Bullet extends TruonObject{
     }
     update(){
         this.timeout = setTimeout(() => {
+
             this.x += this.speed;
             this.translate(this.x, this.y, this.z);
+
+            socket.emit('bullet', {
+                id: this.id,
+                x: this.x,
+                y: this.y,
+                speed: this.speed,
+                playerId: this.playerId,
+            });
             this.update();
+            
         }, 1)
     }
 }
@@ -203,10 +213,10 @@ class Starship extends TruonObject{
             this.x = this.x - this.speedLeft + this.speedRight;
             this.y = this.y - this.speedUp + this.speedDown;
 
-            if(this.x < -worldLimit) this.x = -worldLimit
-            if(this.y < -worldLimit) this.y = -worldLimit
-            if(this.x > worldLimit) this.x = worldLimit
-            if(this.y > worldLimit) this.y = worldLimit
+            // if(this.x < -worldLimit) this.x = -worldLimit
+            // if(this.y < -worldLimit) this.y = -worldLimit
+            // if(this.x > worldLimit) this.x = worldLimit
+            // if(this.y > worldLimit) this.y = worldLimit
             // console.log(this.x, this.y);
 
             this.translate(this.x, this.y, this.z);
@@ -286,13 +296,6 @@ class Starship extends TruonObject{
                 uuidv4()
             )
             bullets.push(this.bullet);
-            socket.emit('bullet', {
-                id: this.bullet.id,
-                x: this.bullet.x,
-                y: this.bullet.y,
-                speed: this.bullet.speed,
-                playerId: this.bullet.playerId,
-            });
         }
     }
     setName(name){
@@ -318,7 +321,7 @@ nameForm.addEventListener('submit', e => {
     e.preventDefault()
     nameButton.parentElement.remove();
     Window.cursor('none');
-    player = new Starship(0, 0, 0, 30, 30, 10, 0.025, 3.75, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
+    player = new Starship(0, 0, 0, 30, 30, 10, 0.1, 5, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
 })
 
 Window.backgroundColor("rgb(0, 0, 15)");
@@ -354,7 +357,7 @@ socket.on('players', socketPlayers => {
         if(socketPlayer.id !== player.id){
             if(!players.some(e => e.id === socketPlayer.id)){
                 // console.log('new Player');
-                players.push(new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.025, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name))
+                players.push(new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.05, 2.5, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name))
             }else{
                 players.forEach(editPlayer => {
                     if(editPlayer.id === socketPlayer.id){
@@ -385,18 +388,6 @@ socket.on('bullets', socketBullets => {
     //console.log('bullets?');
     socketBullets.forEach(socketBullet=> {
         if(!bullets.some(e => e.id === socketBullet.id)){
-            // console.log(
-            //     'new Bullet', 
-            //     socketBullet.x, 
-            //     socketBullet.y, 
-            //     0, 
-            //     10, 
-            //     10, 
-            //     "#fff", 
-            //     socketBullet.speed,
-            //     socketBullet.playerId,
-            //     socketBullet.id
-            // );
             bullets.push(new Bullet(
                 socketBullet.x, 
                 socketBullet.y, 
@@ -408,6 +399,10 @@ socket.on('bullets', socketBullets => {
                 socketBullet.playerId,
                 socketBullet.id
             ))
+        }else{
+            const editBullet = bullets.find(x => x.id === socketBullet.id)
+            editBullet.x = socketBullet.x;
+            editBullet.y = socketBullet.y;
         }
     });
 })
