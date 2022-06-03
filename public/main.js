@@ -321,7 +321,7 @@ nameForm.addEventListener('submit', e => {
     e.preventDefault()
     nameButton.parentElement.remove();
     Window.cursor('none');
-    player = new Starship(0, 0, 0, 30, 30, 10, 0.1, 5, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
+    player = new Starship(0, 0, 0, 30, 30, 10, 0.1, 3.75, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
 })
 
 Window.backgroundColor("rgb(0, 0, 15)");
@@ -357,7 +357,7 @@ socket.on('players', socketPlayers => {
         if(socketPlayer.id !== player.id){
             if(!players.some(e => e.id === socketPlayer.id)){
                 // console.log('new Player');
-                players.push(new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.05, 2.5, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name))
+                players.push(new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.1, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name))
             }else{
                 players.forEach(editPlayer => {
                     if(editPlayer.id === socketPlayer.id){
@@ -401,8 +401,10 @@ socket.on('bullets', socketBullets => {
             ))
         }else{
             const editBullet = bullets.find(x => x.id === socketBullet.id)
-            editBullet.x = socketBullet.x;
-            editBullet.y = socketBullet.y;
+            if(document.body.contains(editBullet.element)){
+                editBullet.x = socketBullet.x;
+                editBullet.y = socketBullet.y;
+            }
         }
     });
 })
