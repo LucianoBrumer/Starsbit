@@ -46,8 +46,8 @@ class TruonCamera{
         this.targetY = y;
     }
     smoothTarget(x, y, delay){
-        this.targetX += this.x + ((x - this.targetX) / delay);
-        this.targetY += this.y + ((y - this.targetY) / delay);
+        this.targetX += ((x - this.targetX) / delay);
+        this.targetY += ((y - this.targetY) / delay);
     }
 }
 const Camera = new TruonCamera();
