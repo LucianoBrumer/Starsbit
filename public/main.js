@@ -118,7 +118,7 @@ class Starship extends TruonObject{
         this.id = id;
         this.name = name;
 
-        this.power = power; 
+        this.power = power;
         this.speedLeft = 0;
         this.speedRight = 0;
         this.speedUp = 0;
@@ -183,9 +183,9 @@ class Starship extends TruonObject{
                         this.x = getRandomArbitrary(-worldLimit/3, worldLimit/3);
                         this.y = getRandomArbitrary(-worldLimit/3, worldLimit/3);
 
-                        socket.emit('kill', {
-                            id: bullet.playerId
-                        })
+                        socket.emit('kill',
+                            bullet.playerId
+                        )
 
                         bullet.active = false;
 
