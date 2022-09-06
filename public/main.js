@@ -87,7 +87,7 @@ class Bullet extends TruonObject{
                 //     speed: this.speed,
                 //     playerId: this.playerId,
                 // });
-				
+
 				if(this.deadTimeoutBool == false){
 					this.deadTimeoutBool = true
 					this.deadTiemout = setTimeout(() => {
@@ -151,23 +151,21 @@ class Starship extends TruonObject{
 
         this.element.appendChild(this.cubex0y2.element);
 
-        if(this.mainPlayer){
-            this.bullets = []
-            for (let i = 0; i < 5; i++) {
-                this.bullet = new Bullet(
-                    this.x + (this.facing == "right" 
-                        ? this.size 
-                        : -this.size), 
-                    this.y + this.size, 
-                    this.z, 
-                    this.size, 
-                    this.size, 
-                    "#fff",
-                    this.id,
-                    uuidv4()
-                )
+        this.bullets = []
+        for (let i = 0; i < 5; i++) {
+            this.bullet = new Bullet(
+                this.x + (this.facing == "right"
+                    ? this.size
+                    : -this.size),
+                this.y + this.size,
+                this.z,
+                this.size,
+                this.size,
+                "#fff",
+                this.id,
+                uuidv4()
+            )
             this.bullets.push(this.bullet);
-            }
         }
     }
     update(){
@@ -235,7 +233,7 @@ class Starship extends TruonObject{
                 this.cubex1y1.setVisible(true);
                 this.cubex_1y1.setVisible(false);
             }
-            
+
             this.x = this.x - this.speedLeft + this.speedRight;
             this.y = this.y - this.speedUp + this.speedDown;
 
@@ -265,12 +263,12 @@ class Starship extends TruonObject{
             if(this.x - this.width - Window.element.clientWidth/2 < -worldLimit) xTarget = -worldLimit + Window.element.clientWidth/2 
             if(this.y + this.height + Window.element.clientHeight/2 > worldLimit) yTarget = worldLimit - Window.element.clientHeight/2 
             if(this.y - this.height - Window.element.clientHeight/2 < -worldLimit) yTarget = -worldLimit + Window.element.clientHeight/2 
-			
+
 			if(this.x + this.width > worldLimit) this.x = worldLimit - this.width
 			if(this.x < -worldLimit) this.x = -worldLimit
 			if(this.y + this.height > worldLimit) this.y = worldLimit - this.height
 			if(this.y < -worldLimit) this.y = -worldLimit
-             
+
             // if(this.mainPlayer) Camera.target(xTarget, yTarget)
             if(this.mainPlayer) Camera.smoothTarget(xTarget, yTarget, 15)
 
@@ -300,47 +298,51 @@ class Starship extends TruonObject{
             if(e.key == this.control.left) this.moveLeft = false;
         }
     }
+    shot(){
+        // this.facing == "right"
+        //         ? this.x -= this.shotPush
+        //         : this.x += this.shotPush
+        // this.bullet = new Bullet(
+        //     this.x + (this.facing == "right"
+        //         ? this.size
+        //         : -this.size),
+        //     this.y + this.size,
+        //     this.z,
+        //     this.size,
+        //     this.size,
+        //     "#fff",
+        //     this.facing == "right"
+        //         ? this.bulletSpeed
+        //         : -this.bulletSpeed,
+        //     this.id,
+        //     uuidv4()
+        // )
+        // bullets.push(this.bullet);
+        this.bullet = this.bullets.find(bullet => !bullet.active)
+        // console.log(this.bullet)
+        if(!this.bullet) {
+            let bestBulletDis = 0
+            let index = 0
+            this.bullets.forEach((bullet, i) => {
+                const bulletDis = getDistance(bullet, this)
+                if(bulletDis > bestBulletDis) {
+                    bestBulletDis = bulletDis
+                    index = i
+                }
+            })
+            this.bullet = this.bullets[index]
+        }
+        if(this.bullet){
+            this.bullet.x = this.x + (this.facing == "right" ? this.size : -this.size)
+            this.bullet.y = this.y + this.size
+            this.bullet.speed = this.facing == "right" ? this.bulletSpeed : -this.bulletSpeed
+            this.bullet.active = true
+        }
+    }
     mouseDown(){
         if(this.mainPlayer){
-            // this.facing == "right" 
-            //         ? this.x -= this.shotPush
-            //         : this.x += this.shotPush 
-            // this.bullet = new Bullet(
-            //     this.x + (this.facing == "right" 
-            //         ? this.size 
-            //         : -this.size), 
-            //     this.y + this.size, 
-            //     this.z, 
-            //     this.size, 
-            //     this.size, 
-            //     "#fff", 
-            //     this.facing == "right" 
-            //         ? this.bulletSpeed 
-            //         : -this.bulletSpeed,
-            //     this.id,
-            //     uuidv4()
-            // )
-            // bullets.push(this.bullet);
-            this.bullet = this.bullets.find(bullet => !bullet.active)
-			console.log(this.bullet)
-            if(!this.bullet) {
-				let bestBulletDis = 0
-				let index = 0
-				this.bullets.forEach((bullet, i) => {
-					const bulletDis = getDistance(bullet, this)
-					if(bulletDis > bestBulletDis) {
-						bestBulletDis = bulletDis
-						index = i
-					}
-				})
-				this.bullet = this.bullets[index]
-			}
-            if(this.bullet){
-				this.bullet.x = this.x + (this.facing == "right" ? this.size : -this.size)
-				this.bullet.y = this.y + this.size
-				this.bullet.speed = this.facing == "right" ? this.bulletSpeed : -this.bulletSpeed
-				this.bullet.active = true
-			}
+            this.shot()
+            socket.emit('shot', this.id)
         }
     }
     setName(name){
@@ -383,7 +385,6 @@ for (let index = 0; index < 25; index++) {
 //         players.forEach(pl => {
 //             TopKills[pl.id] = pl.kills
 //         })
-        
 //         for (let i = 0; i < 10; i++) {
 //             scoreBoard.children[i].textContent = `${i+1}#`
 //         }
@@ -404,7 +405,24 @@ socket.on('players', socketPlayers => {
             if(!players.some(e => e.id === socketPlayer.id)){
                 // console.log('new Player');
                 const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.1, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
-                newPlayer.bullets = socketPlayer.bullets;
+
+                // socketPlayer.bullets.forEach(bullet => {
+                //     console.log(bullet);
+                //     newPlayer.bullets.push(new Bullet({...bullet}))
+                //     // newPlayer.bullets.push(
+                //     //     new Bullet(
+                //     //         bullet.x,
+                //     //         bullet.y,
+                //     //         bullet.z,
+                //     //         bullet.size,
+                //     //         bullet.size,
+                //     //         bullet.color,
+                //     //         bullet.playerId,
+                //     //         bullet.id
+                //     //     )
+                //     // )
+                // })
+
                 players.push(newPlayer)
             }else{
                 players.forEach(editPlayer => {
@@ -421,7 +439,17 @@ socket.on('players', socketPlayers => {
                             editPlayer.x = socketPlayer.x;
                             editPlayer.y = socketPlayer.y;
                             editPlayer.facing = socketPlayer.facing;
-                            editPlayer.bullets = socketPlayer.bullets;
+
+                            // editPlayer.bullets.forEach(editBullet => {
+                            //     socketPlayer.bullets.forEach(socketBullet => {
+                            //         if(socketBullet.id === editBullet.id){
+                            //             editBullet.x = socketBullet.x
+                            //             editBullet.y = socketBullet.y
+                            //             editBullet.active = socketBullet.active
+                            //             editBullet.speed = socketBullet.speed
+                            //         }
+                            //     })
+                            // })
                         }else{
                             // players = players.filter(x => x.id !== socketPlayer.id);
                             // players.push(new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.025, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id));
@@ -438,12 +466,12 @@ socket.on('players', socketPlayers => {
 //     socketBullets.forEach(socketBullet=> {
 //         if(!bullets.some(e => e.id === socketBullet.id)){
 //             bullets.push(new Bullet(
-//                 socketBullet.x, 
-//                 socketBullet.y, 
-//                 0, 
-//                 10, 
-//                 10, 
-//                 "#fff", 
+//                 socketBullet.x,
+//                 socketBullet.y,
+//                 0,
+//                 10,
+//                 10,
+//                 "#fff",
 //                 socketBullet.speed,
 //                 socketBullet.playerId,
 //                 socketBullet.id
@@ -460,12 +488,19 @@ socket.on('players', socketPlayers => {
 
 const scoreBoard = document.getElementById('scoreboard')
 
+socket.on('shot', id => {
+    console.log('someone shot');
+    if(player.id !== id) {
+        console.log('SHGOY!');
+        players.find(x => x.id === id).shot()
+    }
+})
+
 socket.on('kills', kills => {
     Object.entries(kills).forEach(([key, value], index) => {
         if(index < 10) scoreBoard.children[index].textContent = `${index+1}# ${key}: ${value}`
     })
 })
-
 socket.on('displayer', id => {
     console.log(`${id} has disconnected.`)
     players.find(x => x.id === id).destroy()

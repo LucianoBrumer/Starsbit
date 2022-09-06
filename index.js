@@ -50,6 +50,10 @@ io.on('connection', socket => {
     //     bullets = bullets.filter(el => el.id !== data.id)
     // })
 
+    socket.on('shot', data => {
+        io.sockets.emit('shot', data)
+    })
+
     socket.on('kill', data => {
         const name = players.find(x => x.id === data.id).name
         if(!kills[name]) kills[name] = 0
@@ -59,7 +63,7 @@ io.on('connection', socket => {
 
         io.sockets.emit('kills', kills)
     })
-    
+
     socket.on("disconnect", () => {
         players = players.filter(el => el.id !== connections[socket.id])
         io.sockets.emit('displayer', connections[socket.id])
