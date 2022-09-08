@@ -1,8 +1,8 @@
-const socket = io({transports: ['websocket'], upgrade: false});
+const socket = io({transports: ['websocket'], upgrade: false})
 let players = []
 let bullets = []
 let stars = []
-let worldLimit = 2000;
+let worldLimit = 2000
 
 class Cube extends TruonObject{
     constructor(x, y, z, width, height, color){
@@ -36,7 +36,7 @@ class Star extends TruonObject{
             // )   this.create()
             // this.x < 0 && this.create();
             this.update();
-        }, 1)
+        }, 0)
     }
     create(){
         this.x = getRandomArbitrary(player.x - Window.element.clientWidth, player.x + Window.element.clientWidth);
@@ -93,7 +93,7 @@ class Bullet extends TruonObject{
 					this.deadTiemout = setTimeout(() => {
 						clearTimeout(this.deadTimeout)
 						this.active = false
-						console.log('inactive')
+						// console.log('inactive')
 					}, 1000)
 				}
             }else{
@@ -102,7 +102,7 @@ class Bullet extends TruonObject{
 				this.deadTimeoutBool = false
             }
             this.update();
-        }, 1)
+        }, 0)
     }
 }
 
@@ -167,6 +167,8 @@ class Starship extends TruonObject{
             )
             this.bullets.push(this.bullet);
         }
+
+        this.check = true
     }
     update(){
         setTimeout(() => {
@@ -175,27 +177,45 @@ class Starship extends TruonObject{
                 // console.log(this.x, this.y);
                 // Camera.target(this.x + this.size * 2, this.y + this.size *2)
                 // console.log(bullets);
-                let existBullets = bullets.filter(bullet => document.body.contains(bullet.element) && bullet.active);
-                // console.log(existBullets);
-                existBullets.forEach(bullet => {
-                    if(isCollide(player, bullet) && this.id !== bullet.playerId) {
+                players.forEach(xPlayer => {
+                    xPlayer.bullets.forEach(xBullet => {
+                        if(isCollide(this, xBullet) && this.id !== xBullet.playerId && xBullet.active){
+                            // console.log('death');
 
-                        this.x = getRandomArbitrary(-worldLimit/3, worldLimit/3);
-                        this.y = getRandomArbitrary(-worldLimit/3, worldLimit/3);
+                            this.x = getRandomArbitrary(-worldLimit/3, worldLimit/3);
+                            this.y = getRandomArbitrary(-worldLimit/3, worldLimit/3);
 
-                        socket.emit('kill',
-                            bullet.playerId
-                        )
+                            socket.emit('kill', xBullet.playerId)
 
-                        bullet.active = false;
-
-                        // bullet.destroy();
-                        // socket.emit('bulletdead', {
-                        //     id: bullet.id
-                        // });
-
-                    }
+                            xBullet.active = false;
+                        }
+                    })
                 })
+
+                // let existBullets = bullets.filter(bullet => document.body.contains(bullet.element) && bullet.active);
+                // console.log(bullets.length > 0);
+                // existBullets.forEach(bullet => {
+                //     console.log(isCollide(player, bullet))
+                //     if(isCollide(player, bullet) && this.id !== bullet.playerId) {
+
+                //         console.log('death');
+
+                //         this.x = getRandomArbitrary(-worldLimit/3, worldLimit/3);
+                //         this.y = getRandomArbitrary(-worldLimit/3, worldLimit/3);
+
+                //         socket.emit('kill',
+                //             bullet.playerId
+                //         )
+
+                //         bullet.active = false;
+
+                //         // bullet.destroy();
+                //         // socket.emit('bulletdead', {
+                //         //     id: bullet.id
+                //         // });
+
+                //     }
+                // })
             }else{
                 getDistance(this, player) > Window.element.clientWidth/2
                     ? this.setVisible(false)
@@ -239,10 +259,6 @@ class Starship extends TruonObject{
 
             this.translate(this.x, this.y, this.z);
 
-            socket.emit('player', {
-                id: this.id,
-                x: this.x,
-                y: this.y,
                 // moveLeft: this.moveLeft,
                 // moveRight: this.moveRight,
                 // moveDown: this.moveDown,
@@ -251,6 +267,11 @@ class Starship extends TruonObject{
                 // speedRight: this.speedRight,
                 // speedUp: this.speedUp,
                 // speedDown: this.speedDown,
+
+            socket.emit('player', {
+                id: this.id,
+                x: this.x,
+                y: this.y,
                 facing: this.facing,
                 name: this.name,
                 bullets: this.bullets
@@ -273,7 +294,7 @@ class Starship extends TruonObject{
             if(this.mainPlayer) Camera.smoothTarget(xTarget, yTarget, 15)
 
             this.update();
-        }, 1)
+        }, 0)
 
     }
     keyDown(e){
@@ -367,7 +388,7 @@ const nameInput = document.getElementById("name-input")
 const nameButton = document.getElementById("name-button")
 nameForm.addEventListener('submit', e => {
     e.preventDefault()
-    nameButton.parentElement.remove();
+    nameButton.parentElement.style.display = 'none';
     Window.cursor('none');
     player = new Starship(0, 0, 0, 30, 30, 10, 0.1, 3.75, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
 })
@@ -377,20 +398,28 @@ Window.backgroundColor("rgb(0, 0, 15)");
 for (let index = 0; index < 25; index++) {
     stars.push(new Star())
 }
+        // moveLeft: this.moveLeft,
+        // moveRight: this.moveRight,
+        // moveDown: this.moveDown,
+        // moveUp: this.moveUp,
+        // speedLeft: this.speedLeft,
+        // speedRight: this.speedRight,
+        // speedUp: this.speedUp,
+        // speedDown: this.speedDown,
 
 // function loop(){
 //     setTimeout(() => {
-
-//         TopKills[player.id] = player.kills
-//         players.forEach(pl => {
-//             TopKills[pl.id] = pl.kills
+//         socket.emit('player', {
+//             id: player.id,
+//             x: player.x,
+//             y: player.y,
+//             facing: player.facing,
+//             name: player.name,
+//             bullets: player.bullets,
+//             // check: Date.now()
 //         })
-//         for (let i = 0; i < 10; i++) {
-//             scoreBoard.children[i].textContent = `${i+1}#`
-//         }
-
 //         loop()
-//     }, 1)
+//     }, 0)
 // }
 // loop()
 
@@ -489,9 +518,9 @@ socket.on('players', socketPlayers => {
 const scoreBoard = document.getElementById('scoreboard')
 
 socket.on('shot', id => {
-    console.log('someone shot');
+    // console.log('someone shot');
     if(player.id !== id) {
-        console.log('SHGOY!');
+        // console.log('SHGOY!');
         players.find(x => x.id === id).shot()
     }
 })
@@ -501,7 +530,24 @@ socket.on('kills', kills => {
         if(index < 10) scoreBoard.children[index].textContent = `${index+1}# ${key}: ${value}`
     })
 })
+
 socket.on('displayer', id => {
-    console.log(`${id} has disconnected.`)
-    players.find(x => x.id === id).destroy()
+    if(id && id !== player.id) {
+        console.log(`${id} has disconnected.`)
+        players.find(x => x.id === id).destroy()
+    }
 })
+
+// socket.on('reload', playerId => {
+//     console.log('reload');
+//     if(playerId === player.id){
+//         player.destroy()
+//         player = []
+//         player = {
+//             x: Window.element.clientWidth/2,
+//             y: Window.element.clientHeight/2
+//         }
+//         nameButton.parentElement.style.display = 'flex';
+//         Window.cursor('pointer')
+//     }
+// })

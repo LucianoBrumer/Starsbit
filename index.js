@@ -23,6 +23,27 @@ let connections = {}
 
 io.on('connection', socket => {
 
+    // function checkPlayers(){
+    //     setTimeout(() => {
+    //         // console.log(players);
+    //         players.forEach(player => {
+    //             const diffTime = Math.abs(player.check - Date.now())
+    //             console.log(player.check, Date.now(), diffTime, players.length)
+    //             if(diffTime > 1000){
+    //                 io.sockets.emit('displayer', player.id)
+    //                 // console.log(player, players.length);
+    //                 Object.entries(connections).forEach(([socketId, playerId]) => {
+    //                     if(playerId == player.id){
+    //                         io.to(socketId).emit('reload', player.id)
+    //                     }
+    //                 })
+    //             }
+    //         })
+    //         checkPlayers()
+    //     }, 1000)
+    // }
+    // checkPlayers()
+
     console.log("New connection:", socket.id);
 
     socket.on('player', player => {
@@ -68,5 +89,10 @@ io.on('connection', socket => {
         players = players.filter(x => x.id !== connections[socket.id])
         io.sockets.emit('displayer', connections[socket.id])
     })
+
+    // socket.on("reload", () => {
+    //     players = players.filter(x => x.id !== connections[socket.id])
+    //     io.sockets.emit('displayer', connections[socket.id])
+    // })
 
 })
