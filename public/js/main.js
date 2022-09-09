@@ -1,4 +1,8 @@
 screen.orientation.lock('landscape');
+if(navigator.userAgentData.mobile){
+    Joystick.setActive(true)
+    console.log('joysitck');
+}
 
 const socket = io({transports: ['websocket'], upgrade: false})
 let players = []
@@ -103,6 +107,7 @@ class Starship extends TruonObject{
         super(x, y, z, width, height);
 
         this.element.classList.add("box");
+        this.element.style.backgroundColor = 'transparent'
 
         this.color = color;
         this.size = size;
@@ -287,6 +292,35 @@ class Starship extends TruonObject{
             // if(this.mainPlayer) Camera.target(xTarget, yTarget)
             if(this.mainPlayer) Camera.smoothTarget(xTarget, yTarget, 15)
 
+
+            if(Joystick.left) {
+                this.keyDown({key: 'a'})
+                this.rightTouch = true
+            }else if(this.rightTouch){
+                this.keyUp({key: 'a'})
+            }
+
+            if(Joystick.right) {
+                this.keyDown({key: 'd'})
+                this.leftTouch = true
+            }else if(this.leftTouch){
+                this.keyUp({key: 'd'})
+            }
+
+            if(Joystick.up) {
+                this.keyDown({key: 'w'})
+                this.upTouch = true
+            }else if(this.upTouch){
+                this.keyUp({key: 'w'})
+            }
+
+            if(Joystick.down) {
+                this.keyDown({key: 's'})
+                this.downTouch = true
+            }else if(this.downTouch){
+                this.keyUp({key: 's'})
+            }
+
             this.update();
         }, 0)
 
@@ -383,7 +417,7 @@ const nameButton = document.getElementById("name-button")
 
 nameForm.addEventListener('submit', e => {
     e.preventDefault()
-    nameButton.parentElement.style.display = 'none';
+    nameButton.parentElement.parentElement.style.display = 'none';
     Cursor.set('none')
     player = new Starship(10, 10, 0, 30, 30, 10, `rgb(${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)})`, 0.1, 3.75, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
 })

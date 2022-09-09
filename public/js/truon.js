@@ -32,6 +32,12 @@ class TruonWindow{
         this.element.style.width = width;
         this.element.style.height = height;
     }
+    getWidth(){
+        return this.element.clientWidth;
+    }
+    getHeight(){
+        return this.element.clientHeight;
+    }
 }
 const Window = new TruonWindow();
 
@@ -57,7 +63,7 @@ class TruonCamera{
             this.x = -this.targetX+(Window.element.clientWidth/2);
             this.y = -this.targetY+(Window.element.clientHeight/2);
             this.update()
-        }, 1)
+        }, 0)
     }
     target(x, y){
         this.targetX = x;
@@ -71,7 +77,7 @@ class TruonCamera{
 const Camera = new TruonCamera();
 
 class TruonObject {
-    constructor(x, y, z, width, height, color){
+    constructor(x = 0, y = 0, z = 0, width = 10, height = 10, color = '#fff'){
         this.x = x;
         this.y = y;
         this.z = z;
@@ -119,6 +125,11 @@ class TruonObject {
            ? this.element.style.visibility = 'visible'
            : this.element.style.visibility = 'hidden'
     }
+    setActive(bool){
+        bool
+           ? this.element.style.display = 'block'
+           : this.element.style.display = 'none'
+    }
     destroy(){
         this.element.remove();
     }
@@ -128,6 +139,56 @@ class TruonObject {
     mouseUp(e){}
     update(){}
 }
+
+class TruonJoystick extends TruonObject{
+    constructor(x, y, z, radius, color){
+        super(x, y, z = 10, radius, radius, color)
+
+        this.element.style.position = "fixed";
+        this.element.style.borderRadius = `50%`;
+
+        this.element.addEventListener("touchstart", e => this.touchStart(e));
+        document.addEventListener("touchmove", e => this.touchMove(e));
+        document.addEventListener("touchend", e => this.touchEnd(e));
+
+        this.left = false
+        this.right = false
+        this.up = false
+        this.down = false
+
+        this.update();
+    }
+    update(){
+        setTimeout(() => {
+            
+            this.update()
+        }, 0)
+    }
+    touchStart(e){
+        this.touchStartX = e.targetTouches[0].pageX
+        this.touchStartY = e.targetTouches[0].pageY
+    }
+    touchMove(e){
+        this.touchMoveX = e.targetTouches[0].pageX
+        this.touchMoveY = e.targetTouches[0].pageY
+
+        if(this.touchMoveX > this.touchStartX) this.right = true
+        if(this.touchMoveX < this.touchStartX) this.left = true
+        if(this.touchMoveY > this.touchStartY) this.down = true
+        if(this.touchMoveY < this.touchStartY) this.up = true
+        // console.log('move');
+    }
+    touchEnd(){
+        this.left = false
+        this.right = false
+        this.up = false
+        this.down = false
+        console.log('end');
+    }
+}
+console.log();
+const Joystick = new TruonJoystick(100, Window.element.clientHeight - 275, 10, 200, 'rgb(100, 100, 100, 0.1)')
+Joystick.setActive(false)
 
 function uuidv4() {
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
