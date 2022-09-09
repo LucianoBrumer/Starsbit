@@ -172,10 +172,22 @@ class TruonJoystick extends TruonObject{
         this.touchMoveX = e.targetTouches[0].pageX
         this.touchMoveY = e.targetTouches[0].pageY
 
-        if(this.touchMoveX > this.touchStartX) this.right = true
-        if(this.touchMoveX < this.touchStartX) this.left = true
-        if(this.touchMoveY > this.touchStartY) this.down = true
-        if(this.touchMoveY < this.touchStartY) this.up = true
+        if(this.touchMoveX > this.touchStartX) {
+            this.right = true
+            this.left = false
+        }
+        if(this.touchMoveX < this.touchStartX) {
+            this.left = true
+            this.right = false
+        }
+        if(this.touchMoveY > this.touchStartY) {
+            this.down = true
+            this.up = false
+        }
+        if(this.touchMoveY < this.touchStartY) {
+            this.up = true
+            this.down = false
+        }
         // console.log('move');
     }
     touchEnd(){
