@@ -145,8 +145,8 @@ class TruonJoystick extends TruonObject{
         // radius = Window.element.clientHeight/3
         super(x, y, z = 10, radius, radius, color)
 
-        this.element.style.width = "15%";
-        this.element.style.height = `${this.element.clientWidth}px`;
+        this.element.style.width = `${Window.element.clientHeight/3}px`;
+        this.element.style.height = `${Window.element.clientHeight/3}px`;
         this.element.style.position = "fixed";
         this.element.style.left = "0";
         this.element.style.top = null;
@@ -162,6 +162,14 @@ class TruonJoystick extends TruonObject{
         this.right = false
         this.up = false
         this.down = false
+        this.update()
+    }
+    update(){
+        setTimeout(() => {
+            this.element.style.width = `${Window.element.clientHeight/3}px`;
+            this.element.style.height = `${Window.element.clientHeight/3}px`;
+            this.update()
+        }, 0)
     }
     touchStart(e){
         this.touchStartX = e.targetTouches[0].pageX
@@ -198,7 +206,7 @@ class TruonJoystick extends TruonObject{
     }
 }
 console.log();
-const Joystick = new TruonJoystick(100, Window.element.clientHeight - 275, 10, 200, 'rgb(100, 100, 100, 0.1)')
+const Joystick = new TruonJoystick(100, Window.element.clientHeight - 275, 10, 200, 'rgb(255, 255, 255, 0.1)')
 Joystick.setActive(false)
 
 function uuidv4() {
