@@ -9,6 +9,8 @@ let players = []
 let bullets = []
 let stars = []
 let worldLimit = 2000
+let maxStars = 25
+if(navigator.userAgentData.mobile) maxStars = 10
 
 class Star extends TruonObject{
     constructor(){
@@ -424,7 +426,7 @@ nameForm.addEventListener('submit', e => {
 
 Window.backgroundColor("rgb(0, 0, 15)");
 
-for (let index = 0; index < 25; index++) {
+for (let index = 0; index < maxStars; index++) {
     stars.push(new Star())
 }
         // moveLeft: this.moveLeft,
