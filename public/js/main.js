@@ -1,7 +1,6 @@
-const e = require("express")
-
 const socket = io({transports: ['websocket'], upgrade: false})
 let players = []
+let bullets = []
 let stars = []
 let worldLimit = 2000
 let maxStars = 25
