@@ -1,8 +1,8 @@
-screen.orientation.lock('landscape');
-if(navigator.userAgentData.mobile){
-    Joystick.setActive(true)
-    console.log('joysitck');
-}
+// screen.orientation.lock('landscape');
+// if(navigator.userAgentData.mobile){
+//     Joystick.setActive(true)
+//     console.log('joysitck');
+// }
 
 const socket = io({transports: ['websocket'], upgrade: false})
 let players = []
