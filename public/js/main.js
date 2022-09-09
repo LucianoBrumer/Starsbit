@@ -9,14 +9,12 @@ try {
     // if(navigator.userAgentData.mobile){
     if("ontouchstart" in document.documentElement){
         screen.orientation.lock('landscape');
-        Joystick.setActive(true)
         console.log('joysitck');
         maxStars = 10
         document.addEventListener('orientationchange', e => {
             e.preventDefault()
             screen.orientation.lock('landscape');
         });
-        openFullscreen(Window.element)
     }
 } catch (error) {
     console.log(error);
@@ -441,6 +439,10 @@ nameForm.addEventListener('submit', e => {
     nameButton.parentElement.parentElement.style.display = 'none';
     Cursor.set('none')
     player = new Starship(10, 10, 0, 30, 30, 10, `rgb(${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)})`, 0.1, 3.75, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
+    if("ontouchstart" in document.documentElement) {
+        openFullscreen(Window.element)
+        Joystick.setActive(true)
+    }
 })
 
 Window.backgroundColor("rgb(0, 0, 15)");
