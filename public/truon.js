@@ -1,6 +1,6 @@
 class TruonWindow{
     constructor(){
-        this.element = document.createElement('div')
+        this.element = document.createElement('truon')
         document.body.appendChild(this.element)
         this.keyDown = e => {}
         this.keyUp = e => {}
