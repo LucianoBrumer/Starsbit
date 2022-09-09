@@ -1,3 +1,5 @@
+screen.orientation.lock('landscape');
+
 const socket = io({transports: ['websocket'], upgrade: false})
 let players = []
 let bullets = []
