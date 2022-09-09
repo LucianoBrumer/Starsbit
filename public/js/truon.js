@@ -162,14 +162,6 @@ class TruonJoystick extends TruonObject{
         this.right = false
         this.up = false
         this.down = false
-
-        this.update();
-    }
-    update(){
-        setTimeout(() => {
-            
-            this.update()
-        }, 0)
     }
     touchStart(e){
         this.touchStartX = e.targetTouches[0].pageX
@@ -202,7 +194,7 @@ class TruonJoystick extends TruonObject{
         this.right = false
         this.up = false
         this.down = false
-        console.log('end');
+        // console.log('end');
     }
 }
 console.log();
@@ -232,4 +224,18 @@ function getDistance(a, b){
     let y = b.x - a.x;
     let x = b.y - a.y;
     return Math.sqrt(x * x + y * y);
+}
+
+function getRandomNumberFromArray(array){
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+function openFullscreen(el) {
+    if (el.requestFullscreen) {
+        el.requestFullscreen();
+    } else if (el.webkitRequestFullscreen) { /* Safari */
+        el.webkitRequestFullscreen();
+    } else if (el.msRequestFullscreen) { /* IE11 */
+        el.msRequestFullscreen();
+    }
 }

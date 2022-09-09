@@ -1,6 +1,7 @@
+const e = require("express")
+
 const socket = io({transports: ['websocket'], upgrade: false})
 let players = []
-let bullets = []
 let stars = []
 let worldLimit = 2000
 let maxStars = 25
@@ -12,6 +13,11 @@ try {
         Joystick.setActive(true)
         console.log('joysitck');
         maxStars = 10
+        document.addEventListener('orientationchange', e => {
+            e.preventDefault()
+            screen.orientation.lock('landscape');
+        });
+        openFullscreen(Window.element)
     }
 } catch (error) {
     console.log(error);
@@ -195,6 +201,8 @@ class Starship extends TruonObject{
                         }
                     })
                 })
+
+                this.element.setAttribute('id', this.id)
 
                 // let existBullets = bullets.filter(bullet => document.body.contains(bullet.element) && bullet.active);
                 // console.log(bullets.length > 0);
@@ -567,27 +575,13 @@ socket.on('kills', kills => {
     })
 })
 
-// socket.on('dupli', () => {
-//     console.log('dupli');
-// })
+socket.on('ping', () => {
+    socket.emit('pong', player.id)
+})
 
 socket.on('displayer', id => {
     if(id && id !== player.id) {
-        console.log(`${id} has disconnected.`)
+        // console.log(`${id} has disconnected.`)
         players.find(x => x.id === id).destroy()
     }
 })
-
-// socket.on('reload', playerId => {
-//     console.log('reload');
-//     if(playerId === player.id){
-//         player.destroy()
-//         player = []
-//         player = {
-//             x: Window.element.clientWidth/2,
-//             y: Window.element.clientHeight/2
-//         }
-//         nameButton.parentElement.style.display = 'flex';
-//         Window.cursor('pointer')
-//     }
-// })
