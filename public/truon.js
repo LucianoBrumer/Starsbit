@@ -1,6 +1,7 @@
 class TruonWindow{
     constructor(){
-        this.element = document.body;
+        this.element = document.createElement('div')
+        document.body.appendChild(this.element)
         this.keyDown = e => {}
         this.keyUp = e => {}
         this.mouseDown = e => {}
@@ -10,14 +11,27 @@ class TruonWindow{
         document.addEventListener("mousedown", e => this.mouseDown(e));
         document.addEventListener("mouseup", e => this.mouseUp(e));
         this.size();
+
+        this.element.style.left = `0px`;
+        this.element.style.top = `0px`;
+        this.element.style.position = `fixed`;
+        // this.update()
     }
+    // update(){
+    //     this.timeout = setTimeout(() => {
+
+    //         // this.size('100%', '100vh')
+
+    //         // this.update();
+    //     }, 0)
+    // }
     cursor(s){
         this.element.style.cursor = s;
     }
     backgroundColor(s){
         this.element.style.backgroundColor = s;
     }
-    size(width = '100vw', height = '100vh'){
+    size(width = '100%', height = '100%'){
         this.element.style.width = width;
         this.element.style.height = height;
     }
@@ -57,8 +71,8 @@ class TruonObject {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.width = width;
-        this.height = height;        
+        this.width = width
+        this.height = height
 
         this.element = document.createElement("div");
         this.element.style.position = "absolute";
@@ -76,7 +90,7 @@ class TruonObject {
         document.addEventListener("keyup", e => this.keyUp(e));
         document.addEventListener("mousedown", e => this.mouseDown(e));
         document.addEventListener("mouseup", e => this.mouseUp(e));
-        
+
         this.update();
     }
     translate(x, y, z){
@@ -113,7 +127,7 @@ function uuidv4() {
         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
     );
 }
-  
+
 function isCollide(a, b) {
     return !(
         ((a.y + a.height) < (b.y)) ||
@@ -130,6 +144,5 @@ function getRandomArbitrary(min, max) {
 function getDistance(a, b){
     let y = b.x - a.x;
     let x = b.y - a.y;
-    
     return Math.sqrt(x * x + y * y);
 }

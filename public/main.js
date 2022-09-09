@@ -107,11 +107,13 @@ class Bullet extends TruonObject{
 }
 
 class Starship extends TruonObject{
-    constructor(x, y, z, width, height, size, power, maxSpeed, bulletSpeed, shotPush, control, mainPlayer, facing, id, name){
+    constructor(x, y, z, width, height, size, color, power, maxSpeed, bulletSpeed, shotPush, control, mainPlayer, facing, id, name){
         super(x, y, z, width, height);
 
         this.element.classList.add("box");
 
+        this.color = color;
+        console.log(this.color);
         this.size = size;
         this.control = control
         this.mainPlayer = mainPlayer;
@@ -133,12 +135,12 @@ class Starship extends TruonObject{
         this.moveUp = false;
         this.moveDown = false;
 
-        this.cubex0y0 = new Cube(0, 0, 0, this.size * 2, this.size, "#fff");
+        this.cubex0y0 = new Cube(0, 0, 0, this.size * 2, this.size, this.color);
 
-        this.cubex1y1 = new Cube(this.size, this.size, 0, this.size * 2, this.size, "#fff");
-        this.cubex_1y1 = new Cube(-this.size, this.size, 0, this.size * 2, this.size, "#fff");
+        this.cubex1y1 = new Cube(this.size, this.size, 0, this.size * 2, this.size, this.color);
+        this.cubex_1y1 = new Cube(-this.size, this.size, 0, this.size * 2, this.size, this.color);
 
-        this.cubex0y2 = new Cube(0, this.size*2, 0, this.size * 2, this.size, "#fff");
+        this.cubex0y2 = new Cube(0, this.size*2, 0, this.size * 2, this.size, this.color);
 
         this.element.appendChild(this.cubex0y0.element);
 
@@ -162,6 +164,7 @@ class Starship extends TruonObject{
                 this.size,
                 this.size,
                 "#fff",
+                // `rgb(${getRandomArbitrary(100, 255)},${getRandomArbitrary(100, 255)},${getRandomArbitrary(100, 255)})`,
                 this.id,
                 uuidv4()
             )
@@ -173,10 +176,6 @@ class Starship extends TruonObject{
     update(){
         setTimeout(() => {
             if(this.mainPlayer){
-                // Camera.smoothTarget(this.x + this.size * 2, this.y + this.size *2, 25)
-                // console.log(this.x, this.y);
-                // Camera.target(this.x + this.size * 2, this.y + this.size *2)
-                // console.log(bullets);
                 players.forEach(xPlayer => {
                     xPlayer.bullets.forEach(xBullet => {
                         if(isCollide(this, xBullet) && this.id !== xBullet.playerId && xBullet.active){
@@ -386,11 +385,12 @@ let player = {
 const nameForm = document.getElementById("name")
 const nameInput = document.getElementById("name-input")
 const nameButton = document.getElementById("name-button")
+
 nameForm.addEventListener('submit', e => {
     e.preventDefault()
     nameButton.parentElement.style.display = 'none';
     Window.cursor('none');
-    player = new Starship(0, 0, 0, 30, 30, 10, 0.1, 3.75, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
+    player = new Starship(10, 10, 0, 30, 30, 10, `rgb(${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)})`, 0.1, 3.75, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
 })
 
 Window.backgroundColor("rgb(0, 0, 15)");
