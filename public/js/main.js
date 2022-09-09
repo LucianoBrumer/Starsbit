@@ -6,7 +6,8 @@ let worldLimit = 2000
 let maxStars = 25
 
 try {
-    if(navigator.userAgentData.mobile){
+    // if(navigator.userAgentData.mobile){
+    if("ontouchstart" in document.documentElement){
         screen.orientation.lock('landscape');
         Joystick.setActive(true)
         console.log('joysitck');
