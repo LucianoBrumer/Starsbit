@@ -175,12 +175,11 @@ class Starship extends TruonObject{
             this.bullets.push(this.bullet);
         }
 
-        this.check = true
+        // this.socketId = false
     }
     update(){
         setTimeout(() => {
             if(this.mainPlayer){
-
                 players.forEach(xPlayer => {
                     xPlayer.bullets.forEach(xBullet => {
                         if(isCollide(this, xBullet) && this.id !== xBullet.playerId && xBullet.active){
@@ -280,7 +279,8 @@ class Starship extends TruonObject{
                 color: this.color,
                 facing: this.facing,
                 name: this.name,
-                bullets: this.bullets
+                bullets: this.bullets,
+                // socketId: this.socketId
             })
 
             let xTarget = this.x
@@ -466,7 +466,7 @@ for (let index = 0; index < maxStars; index++) {
 
 socket.on('players', socketPlayers => {
     socketPlayers.forEach(socketPlayer => {
-        if(socketPlayer.id !== player.id){
+        if(socketPlayer.id && socketPlayer.id !== player.id){
             if(!players.some(e => e.id === socketPlayer.id)){
                 // console.log('new Player');
                 const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, socketPlayer.color, 0.1, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
@@ -551,7 +551,6 @@ socket.on('players', socketPlayers => {
 //     });
 // })
 
-const scoreBoard = document.getElementById('scoreboard')
 
 socket.on('shot', id => {
     // console.log('someone shot');
@@ -561,11 +560,16 @@ socket.on('shot', id => {
     }
 })
 
+const scoreBoard = document.getElementById('scoreboard')
 socket.on('kills', kills => {
     Object.entries(kills).forEach(([key, value], index) => {
         if(index < 10) scoreBoard.children[index].textContent = `${index+1}# ${key}: ${value}`
     })
 })
+
+// socket.on('dupli', () => {
+//     console.log('dupli');
+// })
 
 socket.on('displayer', id => {
     if(id && id !== player.id) {

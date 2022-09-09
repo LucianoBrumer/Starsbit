@@ -18,46 +18,66 @@ const io = SocketIO(server)
 
 let players = []
 // let bullets = []
-let kills = {}
 let connections = {}
+let kills = {}
+
+// let evaluatePing = false
+// function checkPlayers(){
+//     setTimeout(() => {
+//         // if(!evaluatePing){
+//         //     // players = players.map(player => player.ping = false)
+//         //     players.forEach(player => {
+//         //         player.ping = false
+//         //     })
+//         //     console.log('------------EVALUEATEEEEEEEEE--------------------');
+//         //     console.log(players);
+//         //     console.log('------------EVALUEATEEEEEEEEFINISHE--------------------');
+//         //     evaluatePing = true
+//         // }else{
+//         //     console.log('------------START--------------------');
+//         //     console.log(players.length);
+//         //     console.log(players);
+//         //     players.forEach(player => {
+//         //         if(!player.ping || !player.id){
+//         //             console.log('------------REMOVE--------------------');
+//         //             console.log(player);
+//         //             console.log('remove player');
+//         //             // players = players.filter(x => x.id !== player.id)
+//         //             // io.sockets.emit('displayer', player.id)
+//         //             console.log('------------END--------------------');
+//         //         }
+//         //     })
+//         //     evaluatePing = false
+//         // }
+//         console.log(connections);
+//         checkPlayers()
+//     }, 5000)
+// }
+// checkPlayers()
 
 io.on('connection', socket => {
-
-    function ping(){
-        setTimeout(() => {
-            // console.log(players);
-            // players.forEach(player => {
-            //     const diffTime = Math.abs(player.check - Date.now())
-            //     console.log(player.check, Date.now(), diffTime, players.length)
-            //     if(diffTime > 1000){
-            //         io.sockets.emit('displayer', player.id)
-            //         // console.log(player, players.length);
-            //         Object.entries(connections).forEach(([socketId, playerId]) => {
-            //             if(playerId == player.id){
-            //                 io.to(socketId).emit('reload', player.id)
-            //             }
-            //         })
-            //     }
-            // })
-            io.sockets.emit('ping')
-            ping()
-        }, 1000)
-    }
-    ping()
-
-    console.log("New connection:", socket.id);
+    console.log("New connection:", socket.id)
 
     socket.on('player', player => {
-        if(connections[socket.id] == undefined) {
+        if(!connections[socket.id]){
             connections[socket.id] = player.id
         }
+        // console.log(player.socketId);
+        // players.forEach(x => {
+        //     if(x.id !== player.id && x.socketId === socket.id){
+        //         // console.log('duplicated', x.id, player.id);
+        //         // io.to(x.socketId).emit('dupli')
+        //     }
+        // })
+        // if(!player.socketId) player.socketId = socket.id
+        // player.ping = true
 
         // if(players.includes(player.id)){
         if(players.some(e => e.id === player.id)){
             players = players.filter(el => el.id !== player.id)
         }
         players.push(player)
-        io.sockets.emit('players', players)
+        socket.broadcast.emit('players', players)
     })
 
     // socket.on('bullet', data => {
@@ -73,7 +93,7 @@ io.on('connection', socket => {
     // })
 
     socket.on('shot', playerId => {
-        io.sockets.emit('shot', playerId)
+        socket.broadcast.emit('shot', playerId)
     })
 
     socket.on('kill', playerId => {
@@ -91,7 +111,12 @@ io.on('connection', socket => {
     })
 
     socket.on("disconnect", () => {
+        console.log('disconnect');
+        // player = players.find(x => x.socketId === socket.id)
+        // players = players.filter(x => x.id !== player.id)
+        // io.sockets.emit('displayer', player.id)
         players = players.filter(x => x.id !== connections[socket.id])
+        // console.log(connections[socket.id]);
         io.sockets.emit('displayer', connections[socket.id])
     })
 
