@@ -151,7 +151,7 @@ class TruonJoystick extends TruonObject{
         this.element.style.left = "0";
         this.element.style.top = null;
         this.element.style.bottom = "0";
-        this.element.style.margin = `${this.element.clientWidth/3}px`;
+        this.element.style.margin = `${this.element.clientWidth/5}px`;
         this.element.style.borderRadius = `50%`;
 
         this.element.addEventListener("touchstart", e => this.touchStart(e));
@@ -166,8 +166,13 @@ class TruonJoystick extends TruonObject{
     }
     update(){
         setTimeout(() => {
-            this.element.style.width = `${Window.element.clientHeight/3}px`;
-            this.element.style.height = `${Window.element.clientHeight/3}px`;
+            if(Window.element.clientWidth > Window.element.clientHeight){
+                this.element.style.width = `${Window.element.clientHeight/3}px`;
+                this.element.style.height = `${Window.element.clientHeight/3}px`;
+            }else{
+                this.element.style.width = `${Window.element.clientWidth/3}px`;
+                this.element.style.height = `${Window.element.clientWidth/3}px`;
+            }
             this.update()
         }, 0)
     }
