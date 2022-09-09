@@ -25,9 +25,6 @@ class TruonWindow{
     //         // this.update();
     //     }, 0)
     // }
-    cursor(s){
-        this.element.style.cursor = s;
-    }
     backgroundColor(s){
         this.element.style.backgroundColor = s;
     }
@@ -37,6 +34,13 @@ class TruonWindow{
     }
 }
 const Window = new TruonWindow();
+
+class TruonCursor{
+    set(s){
+        document.body.style.cursor = s
+    }
+}
+const Cursor = new TruonCursor();
 
 class TruonCamera{
     constructor(){
@@ -67,12 +71,13 @@ class TruonCamera{
 const Camera = new TruonCamera();
 
 class TruonObject {
-    constructor(x = 0, y = 0, z = 0, width = 100, height = 100){
+    constructor(x, y, z, width, height, color){
         this.x = x;
         this.y = y;
         this.z = z;
         this.width = width
         this.height = height
+        this.color = color
 
         this.element = document.createElement("div");
         this.element.style.position = "absolute";
@@ -83,6 +88,8 @@ class TruonObject {
 
         this.element.style.width = `${this.width}px`;
         this.element.style.height = `${this.height}px`;
+
+        this.element.style.backgroundColor = this.color
 
         Window.element.appendChild(this.element);
 

@@ -76,13 +76,17 @@ io.on('connection', socket => {
     })
 
     socket.on('kill', playerId => {
-        const name = players.find(x => x.id === playerId).name
-        if(!kills[name]) kills[name] = 0
-        kills[name] = kills[name] + 1
+        try {
+            const name = players.find(x => x.id === playerId).name
+            if(!kills[name]) kills[name] = 0
+            kills[name] = kills[name] + 1
 
-        console.log(kills)
+            console.log(kills)
 
-        io.sockets.emit('kills', kills)
+            io.sockets.emit('kills', kills)
+        } catch (error) {
+            console.log(error);
+        }
     })
 
     socket.on("disconnect", () => {

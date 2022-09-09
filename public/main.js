@@ -4,13 +4,6 @@ let bullets = []
 let stars = []
 let worldLimit = 2000
 
-class Cube extends TruonObject{
-    constructor(x, y, z, width, height, color){
-        super(x, y, z, width, height);
-        this.element.style.backgroundColor = color;
-    }
-}
-
 class Star extends TruonObject{
     constructor(){
         super();
@@ -58,12 +51,9 @@ class Star extends TruonObject{
 
 class Bullet extends TruonObject{
     constructor(x, y, z, width, height, color, playerId, id){
-        super(x, y, z, width, height);
+        super(x, y, z, width, height, color);
 
         this.element.classList.add("box");
-
-        this.cube = new Cube(0, 0, 0, width, height, color);
-        this.element.appendChild(this.cube.element);
 
         this.speed;
         this.playerId = playerId;
@@ -113,7 +103,6 @@ class Starship extends TruonObject{
         this.element.classList.add("box");
 
         this.color = color;
-        console.log(this.color);
         this.size = size;
         this.control = control
         this.mainPlayer = mainPlayer;
@@ -135,12 +124,12 @@ class Starship extends TruonObject{
         this.moveUp = false;
         this.moveDown = false;
 
-        this.cubex0y0 = new Cube(0, 0, 0, this.size * 2, this.size, this.color);
+        this.cubex0y0 = new TruonObject(0, 0, 0, this.size * 2, this.size, this.color);
 
-        this.cubex1y1 = new Cube(this.size, this.size, 0, this.size * 2, this.size, this.color);
-        this.cubex_1y1 = new Cube(-this.size, this.size, 0, this.size * 2, this.size, this.color);
+        this.cubex1y1 = new TruonObject(this.size, this.size, 0, this.size * 2, this.size, this.color);
+        this.cubex_1y1 = new TruonObject(-this.size, this.size, 0, this.size * 2, this.size, this.color);
 
-        this.cubex0y2 = new Cube(0, this.size*2, 0, this.size * 2, this.size, this.color);
+        this.cubex0y2 = new TruonObject(0, this.size*2, 0, this.size * 2, this.size, this.color);
 
         this.element.appendChild(this.cubex0y0.element);
 
@@ -163,7 +152,8 @@ class Starship extends TruonObject{
                 this.z,
                 this.size,
                 this.size,
-                "#fff",
+                // "#fff",
+                this.color,
                 // `rgb(${getRandomArbitrary(100, 255)},${getRandomArbitrary(100, 255)},${getRandomArbitrary(100, 255)})`,
                 this.id,
                 uuidv4()
@@ -176,6 +166,7 @@ class Starship extends TruonObject{
     update(){
         setTimeout(() => {
             if(this.mainPlayer){
+
                 players.forEach(xPlayer => {
                     xPlayer.bullets.forEach(xBullet => {
                         if(isCollide(this, xBullet) && this.id !== xBullet.playerId && xBullet.active){
@@ -184,7 +175,8 @@ class Starship extends TruonObject{
                             this.x = getRandomArbitrary(-worldLimit/3, worldLimit/3);
                             this.y = getRandomArbitrary(-worldLimit/3, worldLimit/3);
 
-                            socket.emit('kill', xBullet.playerId)
+                            // socket.emit('kill', xBullet.playerId)
+                            console.log('kill');
 
                             xBullet.active = false;
                         }
@@ -271,6 +263,7 @@ class Starship extends TruonObject{
                 id: this.id,
                 x: this.x,
                 y: this.y,
+                color: this.color,
                 facing: this.facing,
                 name: this.name,
                 bullets: this.bullets
@@ -389,7 +382,7 @@ const nameButton = document.getElementById("name-button")
 nameForm.addEventListener('submit', e => {
     e.preventDefault()
     nameButton.parentElement.style.display = 'none';
-    Window.cursor('none');
+    Cursor.set('none')
     player = new Starship(10, 10, 0, 30, 30, 10, `rgb(${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)})`, 0.1, 3.75, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
 })
 
@@ -433,7 +426,7 @@ socket.on('players', socketPlayers => {
         if(socketPlayer.id !== player.id){
             if(!players.some(e => e.id === socketPlayer.id)){
                 // console.log('new Player');
-                const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, 0.1, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
+                const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, socketPlayer.color, 0.1, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
 
                 // socketPlayer.bullets.forEach(bullet => {
                 //     console.log(bullet);
