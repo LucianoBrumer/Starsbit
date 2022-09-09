@@ -142,8 +142,11 @@ class TruonObject {
 
 class TruonJoystick extends TruonObject{
     constructor(x, y, z, radius, color){
+        radius = Window.element.clientHeight/3
         super(x, y, z = 10, radius, radius, color)
 
+        this.element.style.left = "5%";
+        this.element.style.bottom = "10%";
         this.element.style.position = "fixed";
         this.element.style.borderRadius = `50%`;
 
