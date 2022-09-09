@@ -180,6 +180,7 @@ class Starship extends TruonObject{
             this.bullets.push(this.bullet);
         }
 
+        document.addEventListener("touchstart", e => this.mouseDown(e));
         // this.socketId = false
     }
     update(){
