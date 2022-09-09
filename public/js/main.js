@@ -1,16 +1,20 @@
-screen.orientation.lock('landscape');
-// if(navigator.userAgentData.mobile){
-//     Joystick.setActive(true)
-//     console.log('joysitck');
-// }
-
 const socket = io({transports: ['websocket'], upgrade: false})
 let players = []
 let bullets = []
 let stars = []
 let worldLimit = 2000
 let maxStars = 25
-// if(navigator.userAgentData.mobile) maxStars = 10
+
+try {
+    if(navigator.userAgentData.mobile){
+        screen.orientation.lock('landscape');
+        Joystick.setActive(true)
+        console.log('joysitck');
+        maxStars = 10
+    }
+} catch (error) {
+    console.log(error);
+}
 
 class Star extends TruonObject{
     constructor(){
