@@ -85,6 +85,8 @@ class TruonObject {
         this.height = height
         this.color = color
 
+        this.ui = false
+
         this.element = document.createElement("div");
         this.element.style.position = "absolute";
 
@@ -110,8 +112,13 @@ class TruonObject {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.element.style.left = `${Camera.x + this.x}px`;
-        this.element.style.top = `${Camera.y + this.y}px`;
+        if(!this.ui){
+            this.element.style.left = `${Camera.x + this.x}px`;
+            this.element.style.top = `${Camera.y + this.y}px`;
+        }else{
+            this.element.style.left = `${this.x}px`;
+            this.element.style.top = `${this.y}px`;
+        }
         this.element.style.zIndex = `${this.z}`;
     }
     scale(width, height){

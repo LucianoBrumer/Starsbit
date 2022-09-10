@@ -3,14 +3,13 @@ let players = []
 let bullets = []
 let stars = []
 let worldLimit = 2000
-let maxStars = 25
+let maxStars = 10
 
 try {
     // if(navigator.userAgentData.mobile){
     if("ontouchstart" in document.documentElement){
         screen.orientation.lock('landscape');
         console.log('joysitck');
-        maxStars = 10
         document.addEventListener('orientationchange', e => {
             e.preventDefault()
             screen.orientation.lock('landscape');
@@ -29,7 +28,7 @@ class Star extends TruonObject{
     update(){
         this.timeout = setTimeout(() => {
 
-            if (getDistance(this, player) > Window.element.clientWidth) this.create()
+            if (getDistance(this, player) > Window.element.clientWidth/2) this.create()
 
             getDistance(this, player) > Window.element.clientWidth/2
                 ? this.setVisible(false)
