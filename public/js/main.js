@@ -577,12 +577,15 @@ socket.on('shot', id => {
     }
 })
 
-const scoreBoard = document.getElementById('scoreboard')
-socket.on('kills', kills => {
-    Object.entries(kills).forEach(([key, value], index) => {
-        if(index < 10) scoreBoard.children[index].textContent = `${index+1}# ${key}: ${value}`
-    })
-})
+const scoreBoard = document.getElementById("scoreboard");
+socket.on("kills", (kills) => {
+	kills.forEach((kill, index) => {
+		scoreBoard.children[index].textContent = `${index + 1}# ${kill.name}: ${
+			kill.kills
+		}`;
+	});
+});
+
 
 socket.on('ping', () => {
     socket.emit('pong', player.id)
