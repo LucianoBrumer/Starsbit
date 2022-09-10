@@ -432,13 +432,14 @@ let player = {
 
 const nameForm = document.getElementById("name")
 const nameInput = document.getElementById("name-input")
+nameInput.focus()
 const nameButton = document.getElementById("name-button")
 
 nameForm.addEventListener('submit', e => {
     e.preventDefault()
     nameButton.parentElement.parentElement.style.display = 'none';
     Cursor.set('none')
-    player = new Starship(10, 10, 0, 30, 30, 10, `rgb(${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)})`, 0.1, 3.75, 7.5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
+    player = new Starship(10, 10, 0, 30, 30, 10, `rgb(${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)})`, 0.1, 2.75, 5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
     if("ontouchstart" in document.documentElement) {
         openFullscreen(Window.element)
         Joystick.setActive(true)

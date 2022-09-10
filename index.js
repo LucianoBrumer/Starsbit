@@ -19,7 +19,7 @@ const io = SocketIO(server)
 let players = []
 let connections = {}
 let validations = {}
-let kills = {}
+let kills = []
 
 let evaluatePing = false
 function checkPlayers(){
@@ -70,17 +70,21 @@ io.on('connection', socket => {
         socket.broadcast.emit('shot', playerId)
     })
 
-    socket.on('kill', playerId => {
-        try {
-            const name = players.find(x => x.id === playerId).name
-            if(!kills[name]) kills[name] = 0
-            kills[name] = kills[name] + 1
-
-            io.sockets.emit('kills', kills)
-        } catch (error) {
-            console.log(error);
-        }
-    })
+    socket.on("kill", (playerId) => {
+		try {
+			let totalKills = 1;
+			if(kills.some(x => x.id === playerId)) totalKills += kills.find((x) => x.id === playerId).kills;
+			const name = players.find((x) => x.id === playerId).name;
+			const kill = { id: playerId, name, kills: totalKills };
+			kills = kills.filter((x) => x.id !== playerId);
+			kills.push(kill);
+			kills = kills.sort((a, b) => b.kills - a.kills);
+			kills.length = Math.min(kills.length, 10);
+			io.sockets.emit("kills", kills);
+		} catch (error) {
+			console.log(error);
+		}
+	})
 
     socket.on("disconnect", () => {
         Object.entries(connections).forEach(([playerId, socketId]) => {
