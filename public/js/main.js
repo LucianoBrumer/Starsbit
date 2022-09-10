@@ -580,9 +580,7 @@ socket.on('shot', id => {
 const scoreBoard = document.getElementById("scoreboard");
 socket.on("kills", (kills) => {
 	kills.forEach((kill, index) => {
-		scoreBoard.children[index].textContent = `${index + 1}# ${kill.name}: ${
-			kill.kills
-		}`;
+		scoreBoard.children[index].textContent = `${index + 1}# ${kill.name}: ${kill.kills}`
 	});
 });
 
