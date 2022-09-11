@@ -181,8 +181,8 @@ class Starship extends TruonObject{
             }
 
             this.power = 0.1
-            this.maxSpeed = 3.75
-            this.bulletSpeed = 7.5
+            this.maxSpeed = 2.75
+            this.bulletSpeed = 5
             worldLimit = 2000
 
             if(this.moveLeft){
@@ -360,7 +360,7 @@ nameForm.addEventListener('submit', e => {
     e.preventDefault()
     nameButton.parentElement.parentElement.style.display = 'none';
     Cursor.set('none')
-    player = new Starship(10, 10, 0, 30, 30, 10, `rgb(${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)})`, 0.1, 2.75, 5, 10, playerControl, true, "right", uuidv4(), nameInput.value);
+    player = new Starship(10, 10, 0, 30, 30, 10, `rgb(${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)},${getRandomArbitrary(150,255)})`, 0.1, 2.75, 5, playerControl, true, "right", uuidv4(), nameInput.value);
     if("ontouchstart" in document.documentElement) {
         openFullscreen(Window.element)
         Joystick.setActive(true)
@@ -382,7 +382,7 @@ socket.on('players', socketPlayers => {
     socketPlayers.forEach(socketPlayer => {
         if(socketPlayer.id && socketPlayer.id !== player.id){
             if(!players.some(e => e.id === socketPlayer.id)){
-                const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, socketPlayer.color, 0.1, 3.75, 7.5, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
+                const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, socketPlayer.color, 0.1, 2.75, 5, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
                 players.push(newPlayer)
             }else{
                 players.forEach(editPlayer => {
