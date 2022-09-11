@@ -93,7 +93,7 @@ class Bullet extends TruonObject{
 }
 
 class Starship extends TruonObject{
-    constructor(x, y, z, width, height, size, color, power, maxSpeed, bulletSpeed, shotPush, control, mainPlayer, facing, id, name){
+    constructor(x, y, z, width, height, size, color, power, maxSpeed, bulletSpeed, control, mainPlayer, facing, id, name){
         super(x, y, z, width, height);
 
         this.element.classList.add("box");
@@ -114,7 +114,6 @@ class Starship extends TruonObject{
         this.maxSpeed = maxSpeed;
 
         this.bulletSpeed = bulletSpeed;
-        this.shotPush = shotPush;
 
         this.moveLeft = false;
         this.moveRight = false;
@@ -175,12 +174,16 @@ class Starship extends TruonObject{
                 })
 
                 this.element.setAttribute('id', this.id)
-
             }else{
                 getDistance(this, player) > Window.element.clientWidth/2
                     ? this.setVisible(false)
                     : this.setVisible(true)
             }
+            //ANTICHEAT
+            this.power = 0.1
+            this.maxSpeed = 3.75
+            this.bulletSpeed = 7.5
+            worldLimit = 2000
 
             if(this.moveLeft){
                 if(this.speedLeft < this.maxSpeed) this.speedLeft += this.power;
@@ -217,7 +220,7 @@ class Starship extends TruonObject{
             this.x = this.x - this.speedLeft + this.speedRight;
             this.y = this.y - this.speedUp + this.speedDown;
 
-            this.translate(this.x, this.y, this.z);
+            this.translate(this.x, this.y, this.z)
 
             socket.emit('player', {
                 id: this.id,
@@ -379,7 +382,7 @@ socket.on('players', socketPlayers => {
     socketPlayers.forEach(socketPlayer => {
         if(socketPlayer.id && socketPlayer.id !== player.id){
             if(!players.some(e => e.id === socketPlayer.id)){
-                const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, socketPlayer.color, 0.1, 3.75, 7.5, 10, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
+                const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, socketPlayer.color, 0.1, 3.75, 7.5, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
                 players.push(newPlayer)
             }else{
                 players.forEach(editPlayer => {
