@@ -179,7 +179,7 @@ class Starship extends TruonObject{
                     ? this.setVisible(false)
                     : this.setVisible(true)
             }
-            //ANTICHEAT
+
             this.power = 0.1
             this.maxSpeed = 3.75
             this.bulletSpeed = 7.5
