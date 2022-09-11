@@ -15,16 +15,7 @@ class TruonWindow{
         this.element.style.left = `0px`;
         this.element.style.top = `0px`;
         this.element.style.position = `fixed`;
-        // this.update()
     }
-    // update(){
-    //     this.timeout = setTimeout(() => {
-
-    //         // this.size('100%', '100vh')
-
-    //         // this.update();
-    //     }, 0)
-    // }
     backgroundColor(s){
         this.element.style.backgroundColor = s;
     }
@@ -207,14 +198,12 @@ class TruonJoystick extends TruonObject{
             this.up = true
             this.down = false
         }
-        // console.log('move');
     }
     touchEnd(){
         this.left = false
         this.right = false
         this.up = false
         this.down = false
-        // console.log('end');
     }
 }
 console.log();
@@ -252,10 +241,10 @@ function getRandomNumberFromArray(array){
 
 function openFullscreen(el) {
     if (el.requestFullscreen) {
-        el.requestFullscreen();
-    } else if (el.webkitRequestFullscreen) { /* Safari */
-        el.webkitRequestFullscreen();
-    } else if (el.msRequestFullscreen) { /* IE11 */
-        el.msRequestFullscreen();
+        el.requestFullscreen()
+    } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen()
+    } else if (el.msRequestFullscreen) {
+        el.msRequestFullscreen()
     }
 }
