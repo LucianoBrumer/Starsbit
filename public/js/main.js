@@ -382,7 +382,7 @@ socket.on('players', socketPlayers => {
     socketPlayers.forEach(socketPlayer => {
         if(socketPlayer.id && socketPlayer.id !== player.id){
             if(!players.some(e => e.id === socketPlayer.id)){
-                const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, socketPlayer.color, 0.1, 2.75, 5, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
+                const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, socketPlayer.color, 0.1, 2.75, 5, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
                 players.push(newPlayer)
             }else{
                 players.forEach(editPlayer => {
