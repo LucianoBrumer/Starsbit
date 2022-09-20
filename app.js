@@ -44,7 +44,7 @@ function checkPlayers(){
         checkPlayers()
     }, 250)
 }
-//checkPlayers()
+checkPlayers()
 
 io.on('connection', socket => {
     console.log("New connection:", socket.id)
@@ -58,6 +58,7 @@ io.on('connection', socket => {
             players.push(player)
             connections[player.id] = socket.id
             io.sockets.emit("newplayer", player);
+            io.to(socket.id).emit('loadplayers', players)
         } catch (error) {
             console.log(error);
         }
@@ -72,7 +73,7 @@ io.on('connection', socket => {
             // if(!players.some(x => x.id === player.id)) players.push(player)
             io.sockets.emit("updateplayer", player);
         } catch (error) {
-            
+            console.log(error);
         }
     })
 
@@ -111,7 +112,6 @@ io.on('connection', socket => {
         } catch (error) {
             console.log(error);
         }
-        
         // console.log(connections[socket.id]);
         // players = players.filter(x => x.id !== connections[socket.id])
         // io.sockets.emit('displayer', connections[socket.id])

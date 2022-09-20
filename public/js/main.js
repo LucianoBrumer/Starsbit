@@ -404,6 +404,16 @@ socket.on('updateplayer', socketPlayer => {
     }
 })
 
+socket.on('loadplayers', socketPlayers => {
+    socketPlayers.forEach(socketPlayer => {
+        if(socketPlayer.id && socketPlayer.id !== player.id && !players.some(e => e.id === socketPlayer.id)){
+            console.log('new player');
+            const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, socketPlayer.color, 0.1, 2.75, 5, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
+            players.push(newPlayer)
+        }
+    })
+})
+
 socket.on('shot', id => {
     if(player.id !== id) {
         players.find(x => x.id === id).shot()
