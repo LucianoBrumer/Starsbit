@@ -44,7 +44,7 @@ function checkPlayers(){
         checkPlayers()
     }, 250)
 }
-checkPlayers()
+//checkPlayers()
 
 io.on('connection', socket => {
     console.log("New connection:", socket.id)
@@ -53,21 +53,35 @@ io.on('connection', socket => {
         validations[playerId] = true
     })
 
-    socket.on('player', player => {
-        if(!connections[player.id]){
+    socket.on('newplayer', player => {
+        try {
+            players.push(player)
             connections[player.id] = socket.id
+            io.sockets.emit("newplayer", player);
+        } catch (error) {
+            console.log(error);
         }
-        players = players.filter(x => x.id !== player.id)
-        players.push(player)
+    })
 
-        // players[players.findIndex((x => x.id === player.id))] = player
-        // if(!players.some(x => x.id === player.id)) players.push(player)
+    socket.on('updateplayer', player => {
+        try {
+            //players = players.filter(x => x.id !== player.id)
+            //players.push(player)
 
-        socket.broadcast.emit('players', players)
+            // players[players.findIndex((x => x.id === player.id))] = player
+            // if(!players.some(x => x.id === player.id)) players.push(player)
+            io.sockets.emit("updateplayer", player);
+        } catch (error) {
+            
+        }
     })
 
     socket.on('shot', playerId => {
-        socket.broadcast.emit('shot', playerId)
+        try {
+            io.sockets.emit('shot', playerId)
+        } catch (error) {
+            console.log(error);
+        }
     })
 
     socket.on("kill", (playerId) => {
@@ -87,12 +101,17 @@ io.on('connection', socket => {
 	})
 
     socket.on("disconnect", () => {
-        Object.entries(connections).forEach(([playerId, socketId]) => {
-            if(socket.id == socketId){
-                players = players.filter(x => x.id !== playerId)
-                io.sockets.emit('displayer', playerId)
-            }
-        })
+        try {
+            Object.entries(connections).forEach(([playerId, socketId]) => {
+                if(socket.id === socketId){
+                    players = players.filter(x => x.id !== playerId)
+                    io.sockets.emit('displayer', playerId)
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+        
         // console.log(connections[socket.id]);
         // players = players.filter(x => x.id !== connections[socket.id])
         // io.sockets.emit('displayer', connections[socket.id])

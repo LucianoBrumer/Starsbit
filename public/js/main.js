@@ -222,15 +222,14 @@ class Starship extends TruonObject{
 
             this.translate(this.x, this.y, this.z)
 
-            socket.emit('player', {
-                id: this.id,
-                x: this.x,
-                y: this.y,
-                color: this.color,
-                facing: this.facing,
-                name: this.name,
-                bullets: this.bullets,
-            })
+            if(this.speedLeft !== 0 || this.speedRight !== 0 || this.speedDown !== 0 || this.speedUp !== 0){
+                socket.emit('updateplayer', {
+                    id: this.id,
+                    x: this.x,
+                    y: this.y,
+                    facing: this.facing
+                })
+            }
 
             let xTarget = this.x
             let yTarget = this.y
@@ -365,6 +364,14 @@ nameForm.addEventListener('submit', e => {
         openFullscreen(Window.element)
         Joystick.setActive(true)
     }
+    socket.emit('newplayer', {
+        id: player.id,
+        x: player.x,
+        y: player.y,
+        color: player.color,
+        facing: player.facing,
+        name: player.name
+    })
 })
 
 Window.backgroundColor("rgb(0, 0, 15)");
@@ -378,23 +385,23 @@ for (let index = 0; index < maxStars; index++) {
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-socket.on('players', socketPlayers => {
-    socketPlayers.forEach(socketPlayer => {
-        if(socketPlayer.id && socketPlayer.id !== player.id){
-            if(!players.some(e => e.id === socketPlayer.id)){
-                const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, socketPlayer.color, 0.1, 2.75, 5, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
-                players.push(newPlayer)
-            }else{
-                players.forEach(editPlayer => {
-                    if(editPlayer.id === socketPlayer.id){
-                        editPlayer.x = socketPlayer.x;
-                        editPlayer.y = socketPlayer.y;
-                        editPlayer.facing = socketPlayer.facing;
-                    }
-                })
-            }
-        }
-    });
+socket.on('newplayer', socketPlayer => {
+    console.log('new player?');
+    console.log(player.id, socketPlayer.id);
+    if(socketPlayer.id && socketPlayer.id !== player.id && !players.some(e => e.id === socketPlayer.id)){
+        console.log('new player');
+        const newPlayer = new Starship(socketPlayer.x, socketPlayer.y, 0, 30, 30, 10, socketPlayer.color, 0.1, 2.75, 5, playerControl, false, socketPlayer.facing, socketPlayer.id, socketPlayer.name)
+        players.push(newPlayer)
+    }
+})
+
+socket.on('updateplayer', socketPlayer => {
+    if(socketPlayer.id && socketPlayer.id !== player.id && players.some(e => e.id === socketPlayer.id)){
+        const updatedPlayer = players[players.findIndex((x => x.id === socketPlayer.id))]
+        updatedPlayer.x = socketPlayer.x
+        updatedPlayer.y = socketPlayer.y
+        updatedPlayer.facing = socketPlayer.facing
+    }
 })
 
 socket.on('shot', id => {
