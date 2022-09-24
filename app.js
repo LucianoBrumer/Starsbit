@@ -1,17 +1,23 @@
 require('dotenv').config()
 
 const path = require('path')
-
+const cors = require('cors')
 const express = require('express')
+
 const app = express()
 
 app.set('port', process.env.PORT || 3000)
 
+app.use(cors())
 app.use(express.static(path.join(__dirname, 'public')))
 
-const server = app.listen(app.get('port'), () => {
-    console.log(`Server on port ${app.get('port')}`);
-})
+const server = app.listen(app.get('port'), require('dns').lookup(require('os').hostname(), (err, add, fam) => {
+    console.log(`Server on ${add}:${app.get('port')}`)
+}))
+
+// const server = app.listen(app.get('port'), () => {
+//     console.log(`Server on localhost:${app.get('port')}`)
+// })
 
 const SocketIO = require('socket.io')
 const io = SocketIO(server)
@@ -59,6 +65,7 @@ io.on('connection', socket => {
             connections[player.id] = socket.id
             io.sockets.emit("newplayer", player);
             io.to(socket.id).emit('loadplayers', players)
+            io.to(socket.id).emit('kills', kills)
         } catch (error) {
             console.log(error);
         }
@@ -66,11 +73,6 @@ io.on('connection', socket => {
 
     socket.on('updateplayer', player => {
         try {
-            //players = players.filter(x => x.id !== player.id)
-            //players.push(player)
-
-            // players[players.findIndex((x => x.id === player.id))] = player
-            // if(!players.some(x => x.id === player.id)) players.push(player)
             io.sockets.emit("updateplayer", player);
         } catch (error) {
             console.log(error);
@@ -112,9 +114,6 @@ io.on('connection', socket => {
         } catch (error) {
             console.log(error);
         }
-        // console.log(connections[socket.id]);
-        // players = players.filter(x => x.id !== connections[socket.id])
-        // io.sockets.emit('displayer', connections[socket.id])
     })
 
 })
