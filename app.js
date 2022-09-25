@@ -65,7 +65,7 @@ io.on('connection', socket => {
             connections[player.id] = socket.id
             io.sockets.emit("newplayer", player);
             io.to(socket.id).emit('loadplayers', players)
-            io.to(socket.id).emit('kills', kills)
+            // io.to(socket.id).emit('kills', kills)
         } catch (error) {
             console.log(error);
         }
@@ -87,31 +87,31 @@ io.on('connection', socket => {
         }
     })
 
-    socket.on("kill", ({playerId, killerId}) => {
-		try {
-            kills = kills.filter(x => x.id !== playerId);
-			let totalKills = 1;
-			if(kills.some(x => x.id === killerId)) totalKills += kills.find((x) => x.id === killerId).kills;
-			const name = players.find((x) => x.id === killerId).name;
-			const kill = { id: killerId, name, kills: totalKills };
-			kills = kills.filter(x => x.id !== killerId);
-			kills.push(kill);
-			kills = kills.sort((a, b) => b.kills - a.kills);
-			kills.length = Math.min(kills.length, 10);
-			io.sockets.emit("kills", kills);
-		} catch (error) {
-			console.log(error);
-		}
-	})
+    // socket.on("kill", ({playerId, killerId}) => {
+	// 	try {
+    //         kills = kills.filter(x => x.id !== playerId);
+	// 		let totalKills = 1;
+	// 		if(kills.some(x => x.id === killerId)) totalKills += kills.find((x) => x.id === killerId).kills;
+	// 		const name = players.find((x) => x.id === killerId).name;
+	// 		const kill = { id: killerId, name, kills: totalKills };
+	// 		kills = kills.filter(x => x.id !== killerId);
+	// 		kills.push(kill);
+	// 		kills = kills.sort((a, b) => b.kills - a.kills);
+	// 		kills.length = Math.min(kills.length, 10);
+	// 		io.sockets.emit("kills", kills);
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// })
 
     socket.on("disconnect", () => {
         try {
             Object.entries(connections).forEach(([playerId, socketId]) => {
                 if(socket.id === socketId){
-                    players = players.filter(x => x.id !== playerId)
+                    players.splice(players.findIndex((player => player.id === playerId)), 1)
                     io.sockets.emit('displayer', playerId)
-                    kills = kills.filter(x => x.id !== playerId);
-                    io.sockets.emit("kills", kills);
+                    // kills = kills.filter(x => x.id !== playerId);
+                    // io.sockets.emit("kills", kills);
                 }
             })
         } catch (error) {
