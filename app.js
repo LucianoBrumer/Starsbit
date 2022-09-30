@@ -42,7 +42,7 @@ function checkPlayers(){
                     players = players.filter(x => x.id !== playerId)
                     delete validations[playerId]
                     delete connections[playerId]
-                    io.sockets.emit('displayer', playerId)
+                    io.sockets.emit('displayerpong', playerId)
                 }
             })
             evaluatePing = false
