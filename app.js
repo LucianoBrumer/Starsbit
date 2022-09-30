@@ -39,7 +39,7 @@ function checkPlayers(){
         }else{
             Object.entries(validations).forEach(([playerId, validation]) => {
                 if(!validation){
-                    players = players.filter(x => x.id !== playerId)
+                    players.splice(players.findIndex((player => player.id === playerId)), 1)
                     delete validations[playerId]
                     delete connections[playerId]
                     io.sockets.emit('displayerpong', playerId)
@@ -131,6 +131,8 @@ io.on('connection', socket => {
             Object.entries(connections).forEach(([playerId, socketId]) => {
                 if(socket.id === socketId){
                     players.splice(players.findIndex((player => player.id === playerId)), 1)
+                    delete validations[playerId]
+                    delete connections[playerId]
                     io.sockets.emit('displayer', playerId)
                     kills = kills.filter(x => x.id !== playerId);
                     io.sockets.emit("kills", kills);
