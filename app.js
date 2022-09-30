@@ -28,27 +28,25 @@ let validations = {}
 let kills = []
 
 let evaluatePing = false
-function checkPlayers(){
-    setTimeout(() => {
-        if(!evaluatePing){
-            Object.entries(connections).forEach(([playerId, socketId]) => {
-                validations[playerId] = false
-                io.to(socketId).emit('ping')
-            })
-            evaluatePing = true
-        }else{
-            Object.entries(validations).forEach(([playerId, validation]) => {
-                if(!validation){
-                    players.splice(players.findIndex((player => player.id === playerId)), 1)
-                    delete validations[playerId]
-                    delete connections[playerId]
-                    io.sockets.emit('displayerpong', playerId)
-                }
-            })
-            evaluatePing = false
-        }
-        checkPlayers()
-    }, 250)
+function checkPlayers() {
+    if(!evaluatePing){
+        Object.entries(connections).forEach(([playerId, socketId]) => {
+            validations[playerId] = false
+            io.to(socketId).emit('ping')
+        })
+        evaluatePing = true
+    }else{
+        Object.entries(validations).forEach(([playerId, validation]) => {
+            if(!validation){
+                players.splice(players.findIndex((player => player.id === playerId)), 1)
+                delete validations[playerId]
+                delete connections[playerId]
+                io.sockets.emit('displayerpong', playerId)
+            }
+        })
+        evaluatePing = false
+    }
+    setTimeout(checkPlayers, 5000)
 }
 checkPlayers()
 
