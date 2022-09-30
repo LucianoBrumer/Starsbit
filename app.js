@@ -92,6 +92,14 @@ io.on('connection', socket => {
         }
     })
 
+    socket.on('requestplayers', () => {
+        try {
+            io.sockets.emit("requestplayers");
+        } catch (error) {
+            console.log(error);
+        }
+    })
+
     socket.on('shot', playerId => {
         try {
             io.sockets.emit('shot', playerId)
