@@ -48,7 +48,7 @@ function checkPlayers() {
     }
     setTimeout(checkPlayers, 5000)
 }
-checkPlayers()
+// checkPlayers()
 
 io.on('connection', socket => {
     console.log("New connection:", socket.id)
