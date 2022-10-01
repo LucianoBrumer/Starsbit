@@ -108,14 +108,19 @@ io.on('connection', socket => {
 
     socket.on("kill", ({player, killerId}) => {
         try {
+            kills = []
+
             const playerKiller = players.find(player => player.id === killerId)
+            if(!playerKiller.kills) playerKiller.kills = 0
             playerKiller.kills += 1
 
-            kills = players.map(player => ({
-                id: player.id,
-                name: player.name,
-                kills: player.kills
-            }))
+            kills = players.map(player => {
+                if(player.kills > 0) return {
+                    id: player.id,
+                    name: player.name,
+                    kills: player.kills
+                }
+            })
 
 			kills = kills.sort((a, b) => b.kills - a.kills);
 			kills.length = Math.min(kills.length, 10);
