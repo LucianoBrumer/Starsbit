@@ -24,40 +24,41 @@ const io = SocketIO(server)
 
 let players = []
 let connections = {}
-let validations = {}
+// let validations = {}
 let kills = []
 
-let evaluatePing = false
-function checkPlayers() {
-    if(!evaluatePing){
-        Object.entries(connections).forEach(([playerId, socketId]) => {
-            validations[playerId] = false
-            io.to(socketId).emit('ping')
-        })
-        evaluatePing = true
-    }else{
-        Object.entries(validations).forEach(([playerId, validation]) => {
-            if(!validation){
-                players.splice(players.findIndex((player => player.id === playerId)), 1)
-                delete validations[playerId]
-                delete connections[playerId]
-                io.sockets.emit('displayerpong', playerId)
-            }
-        })
-        evaluatePing = false
-    }
-    setTimeout(checkPlayers, 5000)
-}
+// let evaluatePing = false
+// function checkPlayers() {
+//     if(!evaluatePing){
+//         Object.entries(connections).forEach(([playerId, socketId]) => {
+//             validations[playerId] = false
+//             io.to(socketId).emit('ping')
+//         })
+//         evaluatePing = true
+//     }else{
+//         Object.entries(validations).forEach(([playerId, validation]) => {
+//             if(!validation){
+//                 players.splice(players.findIndex((player => player.id === playerId)), 1)
+//                 delete validations[playerId]
+//                 delete connections[playerId]
+//                 io.sockets.emit('displayerpong', playerId)
+//             }
+//         })
+//         evaluatePing = false
+//     }
+//     setTimeout(checkPlayers, 5000)
+// }
 // checkPlayers()
 
 io.on('connection', socket => {
     console.log("New connection:", socket.id)
 
-    socket.on('pong', playerId => {
-        validations[playerId] = true
-    })
+    // socket.on('pong', playerId => {
+    //     validations[playerId] = true
+    // })
 
     socket.on('newplayer', player => {
+        console.log('asd');
         try {
             players.push(player)
             connections[player.id] = socket.id
@@ -71,7 +72,7 @@ io.on('connection', socket => {
 
     socket.on('updateplayer', player => {
         try {
-            const updatePlayer = players[players.findIndex(x => x.id === player.id)]
+            // const updatePlayer = players[players.findIndex(x => x.id === player.id)]
             // Object.entries(player).forEach(([key, value]) => {
             //     updatePlayer[key] = value
             // })
@@ -137,7 +138,7 @@ io.on('connection', socket => {
             Object.entries(connections).forEach(([playerId, socketId]) => {
                 if(socket.id === socketId){
                     players.splice(players.findIndex((player => player.id === playerId)), 1)
-                    delete validations[playerId]
+                    // delete validations[playerId]
                     delete connections[playerId]
                     io.sockets.emit('displayer', playerId)
                     kills.splice(kills.findIndex((player => player.id === playerId)), 1)
