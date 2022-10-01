@@ -72,9 +72,9 @@ io.on('connection', socket => {
     socket.on('updateplayer', player => {
         try {
             const updatePlayer = players[players.findIndex(x => x.id === player.id)]
-            updatePlayer.x = player.x
-            updatePlayer.y = player.y
-            updatePlayer.facing = player.facing
+            // Object.entries(player).forEach(([key, value]) => {
+            //     updatePlayer[key] = value
+            // })
             io.sockets.emit("updateplayer", player);
         } catch (error) {
             console.log(error);
@@ -114,16 +114,16 @@ io.on('connection', socket => {
             if(!playerKiller.kills) playerKiller.kills = 0
             playerKiller.kills += 1
 
-            kills = players.map(player => {
-                if(player.kills > 0) return {
-                    id: player.id,
-                    name: player.name,
-                    kills: player.kills
-                }
-            })
+            kills = players.filter(player => player.kills > 0).map(player => ({
+                id: player.id,
+                name: player.name,
+                kills: player.kills
+            }))
 
 			kills = kills.sort((a, b) => b.kills - a.kills);
 			kills.length = Math.min(kills.length, 10);
+
+            console.log(kills);
 
 			io.sockets.emit("kills", kills);
             io.sockets.emit("updateplayer", player);
@@ -140,7 +140,7 @@ io.on('connection', socket => {
                     delete validations[playerId]
                     delete connections[playerId]
                     io.sockets.emit('displayer', playerId)
-                    kills = kills.filter(x => x.id !== playerId);
+                    kills.splice(kills.findIndex((player => player.id === playerId)), 1)
                     io.sockets.emit("kills", kills);
                 }
             })
