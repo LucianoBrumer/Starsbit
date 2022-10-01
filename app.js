@@ -108,17 +108,18 @@ io.on('connection', socket => {
 
     socket.on("kill", ({player, killerId}) => {
         try {
-            // const playerKiller = players.find(player => player.id === killerId)
-            // playerKiller.kills += 1
-            kills = kills.filter(x => x.id !== player.id);
-			let totalKills = 1;
-			if(kills.some(x => x.id === killerId)) totalKills += kills.find((x) => x.id === killerId).kills;
-			const kill = { id: killerId, name: player.name, kills: totalKills };
-            kills = kills.filter(x => x.id !== killerId);
-            players.splice(players.findIndex((player => player.id === playerId)), 1)
-			kills.push(kill);
+            const playerKiller = players.find(player => player.id === killerId)
+            playerKiller.kills += 1
+
+            kills = players.map(player => ({
+                id: player.id,
+                name: player.name,
+                kills: player.kills
+            }))
+
 			kills = kills.sort((a, b) => b.kills - a.kills);
 			kills.length = Math.min(kills.length, 10);
+
 			io.sockets.emit("kills", kills);
             io.sockets.emit("updateplayer", player);
 		} catch (error) {
