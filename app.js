@@ -94,6 +94,7 @@ io.on('connection', socket => {
     socket.on('requestplayers', () => {
         try {
             io.sockets.emit("requestplayers");
+            io.to(socket.id).emit('kills', kills)
         } catch (error) {
             console.log(error);
         }
