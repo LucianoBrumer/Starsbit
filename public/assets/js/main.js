@@ -1,5 +1,4 @@
-let server = 'http://26.178.202.240:3000'
-server = 'https://starsbit.vercel.app'
+const server = 'http://localhost:3000' //'https://starsbit.io'
 const socket = io.connect(server, {transports: ['websocket', 'polling', 'flashsocket'], upgrade: false, reconnection: false})
 
 import {Game} from '../libs/Dazzle.js'
@@ -83,18 +82,6 @@ socket.on('player', socketPlayer => {
             })
 
             game.scenes[game.activeScene].gameObjects[socketPlayer.id].createBullets(game.scenes[game.activeScene].gameObjects[socketPlayer.id])
-
-            // for (let i = 0; i < newPlayer.bulletPool; i++) {
-            //     game.scenes[game.activeScene].gameObjects[socketPlayer.id].bullets[i].playerID = socketPlayer.id
-            //     game.scenes[game.activeScene].gameObjects[socketPlayer.id].bullets[i].color = socketPlayer.playerColor
-            // }
-
-            // console.log('LocalPlayer.ID', localPlayer.id);
-            // console.log('NewPlayer.ID ', game.scenes[game.activeScene].gameObjects[socketPlayer.id].id);
-            // console.log('NewPlayer Bullet.playerID', game.scenes[game.activeScene].gameObjects[socketPlayer.id].bullets[0].playerID);
-            // console.log(socketPlayer.id == game.scenes[game.activeScene].gameObjects[socketPlayer.id].bullets[0].playerID);
-
-            // console.log(game.getGameObjectByTag('bullet').length);
         }
 
         localPlayer.sendSocket(localPlayer)

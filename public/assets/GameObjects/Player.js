@@ -1,5 +1,4 @@
-let server = 'http://26.178.202.240:3000'
-server = 'https://starsbit.vercel.app'
+const server = 'http://localhost:3000' //'https://starsbit.io'
 const socket = io.connect(server, {transports: ['websocket', 'polling', 'flashsocket'], upgrade: false, reconnection: false})
 
 import { getSignWithOne, randomIntFromInterval } from '../libs/Dazzle.js'

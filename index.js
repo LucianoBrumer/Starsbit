@@ -6,7 +6,7 @@ const express = require('express')
 
 const app = express()
 
-// const allowedOrigins = ['http://26.178.202.240:3000'];
+// const allowedOrigins = ['https://starsbit.io'];
 // const corsOptions = {
 //     origin: function (origin, callback) {
 //         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
@@ -18,13 +18,7 @@ const app = express()
 // }
 
 app.use(cors())
-// app.use(express.static(path.join(__dirname, 'public')))
-
-// app.get('/', (req, res) => {
-//     res.json({
-//         "hola": "mundo2"
-//     })
-// })
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.set('port', process.env.PORT || 3000)
 
