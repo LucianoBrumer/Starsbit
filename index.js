@@ -1,10 +1,10 @@
 // require('dotenv').config()
 
-// const path = require('path')
-// const cors = require('cors')
-// const express = require('express')
+const path = require('path')
+const cors = require('cors')
+const express = require('express')
 
-// const app = express()
+const app = express()
 
 // const allowedOrigins = ['http://26.178.202.240:3000'];
 // const corsOptions = {
@@ -17,17 +17,23 @@
 //     },
 // }
 
-// app.use(cors())
+app.use(cors())
 // app.use(express.static(path.join(__dirname, 'public')))
 
-// app.set('port', process.env.PORT || 3000)
+app.get('/', (req, res) => {
+    res.json({
+        "hola": "mundo"
+    })
+})
 
-// const server = app.listen(app.get('port'), require('dns').lookup(require('os').hostname(), (err, host, fam) => {
-//     console.log(`Server on http://${host}:${app.get('port')}`)
-// }))
+app.set('port', process.env.PORT || 3000)
 
-// const SocketIO = require('socket.io')
-// const io = SocketIO(server)
+const server = app.listen(app.get('port'), require('dns').lookup(require('os').hostname(), (err, host, fam) => {
+    console.log(`Server on http://${host}:${app.get('port')}`)
+}))
+
+const SocketIO = require('socket.io')
+const io = SocketIO(server)
 
 // const kills = {}
 // const connections = {}
@@ -77,18 +83,18 @@
 
 // })
 
-const express = require('express')
-const cors = require('cors')
+// const express = require('express')
+// const cors = require('cors')
 
-const app = express()
+// const app = express()
 
-app.use(cors())
-app.get('/', (req, res) => {
-    res.json({
-        "hola": "mundo"
-    })
-})
+// app.use(cors())
+// app.get('/', (req, res) => {
+//     res.json({
+//         "hola": "mundo"
+//     })
+// })
 
-app.listen(3000, () => {
-    console.log(`Working`)
-})
+// app.listen(3000, () => {
+//     console.log(`Working`)
+// })
