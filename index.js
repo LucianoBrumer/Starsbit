@@ -20,11 +20,11 @@ const app = express()
 app.use(cors())
 // app.use(express.static(path.join(__dirname, 'public')))
 
-app.get('/', (req, res) => {
-    res.json({
-        "hola": "mundo2"
-    })
-})
+// app.get('/', (req, res) => {
+//     res.json({
+//         "hola": "mundo2"
+//     })
+// })
 
 app.set('port', process.env.PORT || 3000)
 

@@ -1,4 +1,5 @@
-const server = 'http://26.178.202.240:3000'
+let server = 'http://26.178.202.240:3000'
+server = 'https://starsbit.vercel.app'
 const socket = io.connect(server, {transports: ['websocket', 'polling', 'flashsocket'], upgrade: false, reconnection: false})
 
 import {Game} from '../libs/Dazzle.js'
