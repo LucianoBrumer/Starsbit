@@ -6,97 +6,41 @@ const express = require('express')
 
 const app = express()
 
-app.set('port', process.env.PORT || 3000)
+const allowedOrigins = ['http://26.178.202.240:3000'];
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true)
+        } else {
+            callback(new Error('Acced denied by CORS.'))
+        }
+    },
+}
 
-app.use(cors())
+app.use(cors(corsOptions))
 app.use(express.static(path.join(__dirname, 'public')))
 
-const server = app.listen(app.get('port'), require('dns').lookup(require('os').hostname(), (err, add, fam) => {
-    console.log(`Server on ${add}:${app.get('port')}`)
-}))
+app.set('port', process.env.PORT || 3000)
 
-// const server = app.listen(app.get('port'), () => {
-//     console.log(`Server on localhost:${app.get('port')}`)
-// })
+const server = app.listen(app.get('port'), require('dns').lookup(require('os').hostname(), (err, host, fam) => {
+    console.log(`Server on http://${host}:${app.get('port')}`)
+}))
 
 const SocketIO = require('socket.io')
 const io = SocketIO(server)
 
-let players = []
-let connections = {}
-// let validations = {}
-let kills = []
-
-// let evaluatePing = false
-// function checkPlayers() {
-//     if(!evaluatePing){
-//         Object.entries(connections).forEach(([playerId, socketId]) => {
-//             validations[playerId] = false
-//             io.to(socketId).emit('ping')
-//         })
-//         evaluatePing = true
-//     }else{
-//         Object.entries(validations).forEach(([playerId, validation]) => {
-//             if(!validation){
-//                 players.splice(players.findIndex((player => player.id === playerId)), 1)
-//                 delete validations[playerId]
-//                 delete connections[playerId]
-//                 io.sockets.emit('displayerpong', playerId)
-//             }
-//         })
-//         evaluatePing = false
-//     }
-//     setTimeout(checkPlayers, 5000)
-// }
-// checkPlayers()
+const kills = {}
+const connections = {}
 
 io.on('connection', socket => {
-    console.log("New connection:", socket.id)
+    console.log("[SOCKET.IO] New Connection:", socket.id)
 
-    // socket.on('pong', playerId => {
-    //     validations[playerId] = true
-    // })
-
-    socket.on('newplayer', player => {
-        console.log('asd');
+    socket.on('player', player => {
         try {
-            players.push(player)
             connections[player.id] = socket.id
-            io.sockets.emit("newplayer", player);
-            io.to(socket.id).emit('loadplayers', players)
-            io.to(socket.id).emit('kills', kills)
+            io.sockets.emit("player", player);
         } catch (error) {
-            console.log(error);
-        }
-    })
-
-    socket.on('updateplayer', player => {
-        try {
-            // const updatePlayer = players[players.findIndex(x => x.id === player.id)]
-            // Object.entries(player).forEach(([key, value]) => {
-            //     updatePlayer[key] = value
-            // })
-            io.sockets.emit("updateplayer", player);
-        } catch (error) {
-            console.log(error);
-        }
-    })
-
-    socket.on('requestplayer', id => {
-        try {
-            player = players.find(player => player.id === id)
-            io.to(socket.id).emit("newplayer", player);
-        } catch (error) {
-            console.log(error);
-        }
-    })
-
-    socket.on('requestplayers', () => {
-        try {
-            io.sockets.emit("requestplayers");
-            io.to(socket.id).emit('kills', kills)
-        } catch (error) {
-            console.log(error);
+            console.error(`[SOCKET.IO:ON'player' ERROR], ${error}}`);
         }
     })
 
@@ -104,50 +48,30 @@ io.on('connection', socket => {
         try {
             io.sockets.emit('shot', playerId)
         } catch (error) {
-            console.log(error);
+            console.error(`[SOCKET.IO:ON'shot' ERROR], ${error}}`);
         }
     })
 
-    socket.on("kill", ({player, killerId}) => {
+    socket.on('death', playerKillerId => {
         try {
-            kills = []
-
-            const playerKiller = players.find(player => player.id === killerId)
-            if(!playerKiller.kills) playerKiller.kills = 0
-            playerKiller.kills += 1
-
-            kills = players.filter(player => player.kills > 0).map(player => ({
-                id: player.id,
-                name: player.name,
-                kills: player.kills
-            }))
-
-			kills = kills.sort((a, b) => b.kills - a.kills);
-			kills.length = Math.min(kills.length, 10);
-
-            console.log(kills);
-
-			io.sockets.emit("kills", kills);
-            io.sockets.emit("updateplayer", player);
-		} catch (error) {
-			console.log(error);
-		}
-	})
+            kills[playerKillerId] = kills[playerKillerId] === undefined ? 0 : kills[playerKillerId]+1
+            io.sockets.emit('kills', kills)
+        } catch (error) {
+            console.error(`[SOCKET.IO:ON'death' ERROR], ${error}}`);
+        }
+    })
 
     socket.on("disconnect", () => {
         try {
             Object.entries(connections).forEach(([playerId, socketId]) => {
                 if(socket.id === socketId){
-                    players.splice(players.findIndex((player => player.id === playerId)), 1)
-                    // delete validations[playerId]
                     delete connections[playerId]
+                    delete kills[playerId]
                     io.sockets.emit('displayer', playerId)
-                    kills.splice(kills.findIndex((player => player.id === playerId)), 1)
-                    io.sockets.emit("kills", kills);
                 }
             })
         } catch (error) {
-            console.log(error);
+            console.error(`[SOCKET.IO:ON'disconnect' ERROR], ${error}}`);
         }
     })
 
