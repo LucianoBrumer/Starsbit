@@ -1,8 +1,8 @@
 {
-  "name": "starsbit.io",
+  "name": "starsbit",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
