@@ -15,6 +15,7 @@ const corsOptions = {
             callback(new Error('Acced denied by CORS.'))
         }
     },
+    methods: ['GET'],
 }
 
 app.use(cors(corsOptions))
