@@ -6,18 +6,18 @@ const express = require('express')
 
 const app = express()
 
-// const allowedOrigins = ['https://starsbit.io'];
-// const corsOptions = {
-//     origin: function (origin, callback) {
-//         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-//             callback(null, true)
-//         } else {
-//             callback(new Error('Acced denied by CORS.'))
-//         }
-//     },
-// }
+const allowedOrigins = ['https://starsbit.io', 'http://192.168.0.42:3000', 'http://localhost:3000', 'http://26.178.202.240:3000'];
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true)
+        } else {
+            callback(new Error('Acced denied by CORS.'))
+        }
+    },
+}
 
-app.use(cors())
+app.use(cors(corsOptions))
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.set('port', process.env.PORT || 3000)
