@@ -1,9 +1,1 @@
-export default {
-    color: 'rgb(15, 15, 35)',
-    load: current => {
-        current.x = -current.scene.worldLimit
-        current.y = -current.scene.worldLimit
-        current.width = current.scene.worldLimit * 2
-        current.height = current.scene.worldLimit * 2
-    }
-}
+export default{color:"rgb(15, 15, 35)",load:e=>{e.x=-e.scene.worldLimit,e.y=-e.scene.worldLimit,e.width=2*e.scene.worldLimit,e.height=2*e.scene.worldLimit}};

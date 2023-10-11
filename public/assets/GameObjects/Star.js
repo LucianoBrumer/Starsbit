@@ -1,47 +1,6 @@
-import {randomFloatFromInterval, getDifference, randomIntFromInterval, isInside} from '../libs/Dazzle.js'
-
-export default {
-    custom: {
-        target: {
-            x: 0,
-            y: 0,
-        },
-        speedRange: 500,
-        speedValue: 0,
-    },
-    load: current => {
-        current.x = randomFloatFromInterval(current.target.x - current.scene.game.width/2, current.target.x + current.scene.game.width/2);
-        current.y = randomFloatFromInterval(current.target.y - current.scene.game.height/2, current.target.y + current.scene.game.height/2);
-
-        current.size = randomFloatFromInterval(5, 15);
-        current.width = current.size
-        current.height = current.size
-        current.speedValue = randomFloatFromInterval(-current.speedRange, current.speedRange);
-        current.color = `
+import{randomFloatFromInterval,getDifference,randomIntFromInterval,isInside}from"../libs/Dazzle.js";export default{custom:{target:{x:0,y:0},speedRange:500,speedValue:0},load:e=>{e.x=randomFloatFromInterval(e.target.x-e.scene.game.width/2,e.target.x+e.scene.game.width/2),e.y=randomFloatFromInterval(e.target.y-e.scene.game.height/2,e.target.y+e.scene.game.height/2),e.size=randomFloatFromInterval(5,15),e.width=e.size,e.height=e.size,e.speedValue=randomFloatFromInterval(-e.speedRange,e.speedRange),e.color=`
             rgb(
-                ${randomIntFromInterval(0, 255)},
-                ${randomIntFromInterval(0, 255)},
-                ${randomIntFromInterval(0, 255)}
-            )`;
-
-        const world = current.scene.game.getGameObject('world')
-        if(world.width > 10 && !isInside(current, world)) {
-            current.load(current)
-        }
-    },
-    update: current => {
-        const player = current.scene.game.getGameObject('player')
-        current.target = {x: player.x, y: player.y}
-
-        if(getDifference(current.x, current.target.x) > current.scene.game.width/1.5) current.load(current)
-        if(getDifference(current.y, current.target.y) > current.scene.game.height/1.5) current.load(current)
-
-        const world = current.scene.game.getGameObject('world')
-        if(!isInside(current, world)) {
-            current.load(current)
-        }
-
-        const dt = current.scene.game.deltaTime
-        current.x += current.speedValue * dt;
-    }
-}
+                ${randomIntFromInterval(0,255)},
+                ${randomIntFromInterval(0,255)},
+                ${randomIntFromInterval(0,255)}
+            )`;var a=e.scene.game.getGameObject("world");10<a.width&&!isInside(e,a)&&e.load(e)},update:e=>{var a=e.scene.game.getGameObject("player"),a=(e.target={x:a.x,y:a.y},getDifference(e.x,e.target.x)>e.scene.game.width/1.5&&e.load(e),getDifference(e.y,e.target.y)>e.scene.game.height/1.5&&e.load(e),e.scene.game.getGameObject("world")),a=(isInside(e,a)||e.load(e),e.scene.game.deltaTime);e.x+=e.speedValue*a}};
