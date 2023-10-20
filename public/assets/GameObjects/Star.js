@@ -1,6 +1,0 @@
-import{randomFloatFromInterval,getDifference,randomIntFromInterval,isInside}from"../libs/Dazzle.js";export default{custom:{target:{x:0,y:0},speedRange:500,speedValue:0},load:e=>{e.x=randomFloatFromInterval(e.target.x-e.scene.game.width/2,e.target.x+e.scene.game.width/2),e.y=randomFloatFromInterval(e.target.y-e.scene.game.height/2,e.target.y+e.scene.game.height/2),e.size=randomFloatFromInterval(5,15),e.width=e.size,e.height=e.size,e.speedValue=randomFloatFromInterval(-e.speedRange,e.speedRange),e.color=`
-            rgb(
-                ${randomIntFromInterval(0,255)},
-                ${randomIntFromInterval(0,255)},
-                ${randomIntFromInterval(0,255)}
-            )`;var a=e.scene.game.getGameObject("world");10<a.width&&!isInside(e,a)&&e.load(e)},update:e=>{var a=e.scene.game.getGameObject("player"),a=(e.target={x:a.x,y:a.y},getDifference(e.x,e.target.x)>e.scene.game.width/1.5&&e.load(e),getDifference(e.y,e.target.y)>e.scene.game.height/1.5&&e.load(e),e.scene.game.getGameObject("world")),a=(isInside(e,a)||e.load(e),e.scene.game.deltaTime);e.x+=e.speedValue*a}};

@@ -1,4 +1,5 @@
 const server = 'http://localhost:3000' //'https://starsbit.io'
+import {io} from '../libs/socket.io.esm.min.js'
 const socket = io.connect(server, {transports: ['websocket', 'polling', 'flashsocket'], upgrade: false, reconnection: false})
 
 import {Game} from '../libs/Dazzle.js'

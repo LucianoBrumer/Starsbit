@@ -1,1 +1,0 @@
-export default{color:"rgb(15, 15, 35)",load:e=>{e.x=-e.scene.worldLimit,e.y=-e.scene.worldLimit,e.width=2*e.scene.worldLimit,e.height=2*e.scene.worldLimit}};
