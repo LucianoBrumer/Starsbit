@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "cd src & npx vite build"
+    "build": "npx vite build"
   },
   "keywords": [],
   "author": "",
