@@ -304,7 +304,7 @@ class Game {
                 if (this[methodEventName] && typeof this[methodEventName] === 'function') this[methodEventName]({event, current: this})
 
                 const activeScene = this.getActiveScene()
-                if (activeScene[methodEventName] && typeof activeScene[methodEventName] === 'function') activeScene[methodEventName]({event, current: activeScene})
+                if (activeScene && activeScene[methodEventName] && typeof activeScene[methodEventName] === 'function') activeScene[methodEventName]({event, current: activeScene})
 
                 const gameObjects = activeScene.getGameObjects()
                 Object.entries(gameObjects).forEach(([name, gameObject]) => {

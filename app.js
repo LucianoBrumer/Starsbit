@@ -6,7 +6,7 @@ const express = require('express')
 
 const app = express()
 
-const allowedOrigins = ['https://starsbit.io', 'http://192.168.0.42:3000', 'http://localhost:3000', 'http://26.178.202.240:3000'];
+const allowedOrigins = ['https://starsbit.io', 'http://192.168.0.42:3000', 'http://localhost:3000', 'http://26.178.202.240:3000', 'http://26.143.178.55:3000'];
 const corsOptions = {
     origin: function (origin, callback) {
         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
@@ -34,7 +34,7 @@ const kills = {}
 const connections = {}
 
 io.on('connection', socket => {
-    console.log("[SOCKET.IO] New Connection:", socket.id)
+    console.log("[SOCKET.IO] New connection:", socket.id)
 
     socket.on('player', player => {
         try {
